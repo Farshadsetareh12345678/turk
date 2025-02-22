@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url(https://dragon.img2go.com/download-file/b8059936-593c-4565-b697-2b51ae1f057f/d47462b0-e170-4be0-bff9-316c86956aac); /* تصویر پس‌زمینه */
+    background-size: cover;
+    color: white;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.7); /* کادر مات */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 50px;
+}
