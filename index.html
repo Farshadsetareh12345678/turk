@@ -1,540 +1,796 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8" />
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>تصمیم‌یار آینده‌نگر (نسخه کامل)</title>
+<title>آینه آینده X — نسخه نهایی</title>
+<meta name="color-scheme" content="dark light" />
 <style>
-:root{
-  --bg:#0b1220; --panel:#0e1522; --muted:#9fb0c3; --text:#e7edf5; --accent:#7ee787; --border:#22304a; --danger:#ff6b6b; --warn:#ffb020;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:radial-gradient(1200px 800px at 80% -10%,#1a2642 0%,rgba(11,18,32,0) 70%),var(--bg);color:var(--text);font:15px/1.7 Vazirmatn,Segoe UI,Roboto,Arial}
-.container{max-width:1100px;margin:24px auto;padding:0 16px}
-h1{font-size:26px;margin:8px 0 18px}
-h2{font-size:18px;margin:18px 0 10px}
-h3{font-size:16px;margin:14px 0 8px;color:#cfe6ff}
-.section{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:900px){.row{grid-template-columns:1fr}}
-.input{display:flex;flex-direction:column;gap:6px}
-.input label{font-weight:600}
-.input input[type="text"], .input select, .input textarea, .pill{
-  background:#0b1322;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px
-}
-.input textarea{min-height:72px}
-.small{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media (max-width:700px){.grid{grid-template-columns:1fr 1fr}}
-.sliderRow{display:grid;grid-template-columns:120px 1fr 40px;gap:8px;align-items:center}
-code.badge{background:#0b1322;border:1px solid var(--border);padding:2px 8px;border-radius:999px;color:var(--muted)}
-.kpi{display:flex;gap:12px;flex-wrap:wrap}
-.kpi .card{flex:1 1 200px;background:#0b1322;border:1px solid var(--border);border-radius:12px;padding:10px}
-.table{width:100%;border-collapse:separate;border-spacing:0 6px}
-.table th,.table td{padding:10px;background:#0b1322;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.table th:first-child,.table td:first-child{border-right:1px solid var(--border);border-radius:10px 0 0 10px}
-.table th:last-child,.table td:last-child{border-left:1px solid var(--border);border-radius:0 10px 10px 0}
-.alert{padding:10px;border-radius:10px;border:1px solid var(--border);background:#101828}
-.alert.warn{border-color:#4b3a0d;background:rgba(255,176,32,0.07);color:#ffd78a}
-.alert.danger{border-color:#4a1a1a;background:rgba(255,107,107,0.07);color:#ffb5b5}
-.btn{background:linear-gradient(180deg,#1f6f5d,#145346);border:1px solid #1e5c4c;color:white;padding:10px 14px;border-radius:10px;cursor:pointer}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border-radius:16px;border:1px solid var(--border);background:#0b1322;cursor:pointer}
-.chip input{margin:0}
-.progress{height:8px;background:#0f1a2b;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
-.progress > span{display:block;height:100%;background:linear-gradient(90deg,#7ee787,#42b883);width:0%}
-.bad{background:linear-gradient(90deg,#ff6b6b,#ff9f7a)!important}
-.neutral{background:linear-gradient(90deg,#a0b3c6,#c1cfdb)!important}
-.recList{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:900px){.recList{grid-template-columns:1fr}}
-.recItem{border:1px dashed var(--border);border-radius:12px;padding:10px;background:#0b1322}
-.recItem .why{color:var(--muted);font-size:12px;margin-top:6px}
-.matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media (max-width:900px){.matrix{grid-template-columns:1fr 1fr}}
-.box{border:1px solid var(--border);border-radius:12px;padding:10px;background:#0b1322}
-.analysisBox{background:linear-gradient(180deg,#0e1522,#0c111b);border:1px solid var(--border);border-radius:14px;padding:12px;line-height:1.9}
-.analysisBox .rec{margin-top:10px;padding:8px;border-left:3px solid var(--accent);background:rgba(126,231,135,0.06);border-radius:8px}
-.analysisBox .reason{font-size:12px;color:var(--muted);margin-top:4px}
-.footer{color:#8ea3b7;font-size:12px;margin-top:6px}
-hr.sep{border:none;border-top:1px dashed var(--border);margin:12px 0}
+  :root{
+    --bg1:#0b111a; --bg2:#0e1624; --panel:#0f1726; --chip:#0b1322;
+    --text:#eaf1ff; --muted:#9fb0cc; --border:#22304a; --accent:#7ee787; --accent2:#7aa2f7;
+    --warn:#ffcd4d; --risk:#ff6b6b; --ok:#00d2a8;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font:15px/1.8 Vazirmatn,Segoe UI,Roboto,Arial;background:
+    radial-gradient(1200px 800px at 80% -10%,#1a2642 0%,rgba(11,18,32,0) 70%),linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text)}
+  a{color:inherit}
+  header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:linear-gradient(180deg,rgba(11,18,32,.92),rgba(11,18,32,.6) 70%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .brand{display:flex;gap:10px;align-items:center}
+  .logo{width:36px;height:36px;border-radius:10px;background:
+    radial-gradient(80% 80% at 30% 30%, #7ee78744, transparent 70%),linear-gradient(135deg,#24344a,#141c29);
+    border:1px solid var(--border);box-shadow:0 0 28px #7ee78722 inset,0 0 12px #7aa2f722}
+  h1{margin:0;font-size:18px}
+  .sub{font-size:12px;color:var(--muted)}
+  .header-actions{display:flex;gap:8px;align-items:center}
+  .btn{background:linear-gradient(180deg,#1e2f4a,#17243a);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:10px;cursor:pointer}
+  .btn.primary{background:linear-gradient(180deg,#1a3b34,#112822);border-color:#2a7b5f;color:#aef7d3}
+  .btn:hover{transform:translateY(-1px)}
+  .toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+  .toggle input{accent-color:var(--accent);width:18px;height:18px}
+
+  .container{max-width:1240px;margin:16px auto 60px;padding:0 16px}
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:14px}
+  @media (max-width:1020px){.grid{grid-template-columns:1fr}}
+
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:16px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.06)}
+  .panel h2{font-size:16px;margin:0 0 8px 0;color:#cfe3ff}
+  .panel p{color:var(--muted);margin:6px 0 10px 0}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .col{flex:1 1 160px}
+  .input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#0e1420;color:var(--text);outline:none}
+  label{display:block;font-size:13px;color:#cfe3ff;margin:8px 0 6px}
+  .hint{font-size:12px;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{border:1px solid var(--border);background:var(--chip);color:#cfe3ff;font-size:12px;padding:6px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+  .chip .dot{width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap}
+  .kcard{flex:1 1 160px;background:#0b1322;border:1px solid var(--border);border-radius:14px;padding:10px}
+  .kcard .t{font-size:12px;color:#b7c7e8}
+  .progress{height:10px;background:#0f1a2b;border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+  .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#42b883);width:0%}
+  .progress.neutral > span{background:linear-gradient(90deg,#7aa2f7,#c7d2fe)}
+  .progress.risk > span{background:linear-gradient(90deg,#ff6b6b,#ff9f7a)}
+  .alerts{display:flex;flex-direction:column;gap:8px}
+  .alert{border:1px solid var(--border);border-left:4px solid var(--warn);background:rgba(255,205,77,.08);padding:8px 10px;border-radius:12px}
+  .alert.danger{border-left-color:var(--risk);background:rgba(255,107,107,.08)}
+  .alert.ok{border-left-color:var(--ok);background:rgba(0,210,168,.08)}
+  .viz{display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
+  @media (max-width:1020px){.viz{grid-template-columns:1fr}}
+  .canvasWrap{position:relative;background:linear-gradient(180deg,rgba(15,21,32,.8),rgba(10,14,22,.6));border:1px solid var(--border);border-radius:14px;padding:8px}
+  #radar{width:100%;height:360px}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .legend .chip{background:#0e1726}
+  .why{background:linear-gradient(180deg,#0e1522,#0c111b);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;max-height:400px;overflow:auto}
+  .why h3{margin:0 0 2px 0;font-size:14px;color:#cfe3ff}
+  .reason{display:flex;gap:10px;border-bottom:1px dashed var(--border);padding-bottom:8px}
+  .reason:last-child{border-bottom:none}
+  .bar{height:6px;background:#122036;border-radius:8px;overflow:hidden}
+  .bar > span{display:block;height:100%;background:linear-gradient(90deg,#7ee787,#7aa2f7)}
+  .srcs{display:flex;flex-wrap:wrap;gap:8px}
+  .timeline{background:linear-gradient(180deg,#0e1522,#0c111b);border:1px solid var(--border);border-radius:14px;padding:10px}
+  .timeline svg{width:100%;height:140px}
+  .tick text{fill:#a9bfde;font-size:12px}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media (max-width:900px){.actions{grid-template-columns:1fr}}
+  .actionCard{background:linear-gradient(180deg,#0f1726,#0c131f);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px}
+  .pill{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);color:#bcd2f0;display:inline-flex;gap:6px;align-items:center}
+  .impact{color:#aef7d3}.difficulty{color:#ffd28b}
+  .matrix{margin-top:8px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .matrix table{width:100%;border-collapse:collapse;font-size:12px}
+  .matrix th,.matrix td{padding:8px 10px;border-bottom:1px solid var(--border)}
+  .matrix th{background:#0f1624;color:#cfe3ff;position:sticky;top:0}
+  .analysisBox{background:linear-gradient(180deg,#0e1522,#0c111b);border:1px solid var(--border);border-radius:14px;padding:12px;line-height:1.9}
+  .analysisBox .rec{margin-top:10px;padding:8px;border-left:3px solid var(--accent);background:rgba(126,231,135,.06);border-radius:8px}
+  .analysisBox .reason{font-size:12px;color:var(--muted);margin-top:4px}
+  footer{margin:20px 0 50px;text-align:center;color:#89a1c5;font-size:12px}
+  .sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 </style>
 </head>
 <body>
+<header>
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>آینه آینده X — نسخه نهایی</h1>
+      <div class="sub">سناریوساز شخصی با پشتوانه اندیشکده‌ها، هشدار ریسک، و اقدامات عملی</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button id="saveBtn" class="btn" aria-label="ذخیره سناریو">ذخیره</button>
+    <button id="exportBtn" class="btn" aria-label="چاپ و خروجی PDF">چاپ/PDF</button>
+    <label class="toggle" for="themeToggle">
+      <input id="themeToggle" type="checkbox" /> حالت روشن
+    </label>
+  </div>
+</header>
+
 <div class="container">
-  <h1>تصمیم‌یار آینده‌نگر</h1>
-  <div class="section">
-    <div class="row">
-      <div class="input">
-        <label>عنوان تصمیم</label>
-        <input id="decision" type="text" placeholder="مثلاً: تغییر مسیر شغلی به دیتا ساینس" />
-        <span class="small">کوتاه و مشخص بنویس.</span>
-      </div>
+  <div class="grid" role="region" aria-label="پیکربندی و نتایج">
+    <!-- Sidebar -->
+    <div class="panel" aria-labelledby="profile-title">
+      <h2 id="profile-title">پروفایل، تصمیم و منابع</h2>
+
+      <label for="decision">عنوان تصمیم</label>
+      <input id="decision" class="input" type="text" placeholder="مثلاً: تغییر مسیر به علم داده">
+
       <div class="row">
-        <div class="input">
-          <label>افق تصمیم (ماه)</label>
-          <input id="horizon" type="number" min="1" max="60" value="12" />
-          <span class="small">بازه‌ای که می‌خواهی در آن نتیجه ببینی.</span>
-        </div>
-        <div class="input">
-          <label>تحمل ریسک</label>
+        <div class="col">
+          <label for="risk">تحمل ریسک</label>
           <select id="risk">
             <option value="low">کم</option>
-            <option value="medium" selected>متوسط</option>
+            <option value="mid" selected>متوسط</option>
             <option value="high">زیاد</option>
           </select>
         </div>
+        <div class="col">
+          <label for="horizon">افق زمانی</label>
+          <select id="horizon">
+            <option value="6">۶ ماه</option>
+            <option value="12" selected>۱۲ ماه</option>
+            <option value="24">۲۴ ماه</option>
+            <option value="36">۳۶ ماه</option>
+          </select>
+        </div>
+      </div>
+
+      <label>ترندهای مدنظر</label>
+      <div id="trendChips" class="chips" aria-label="انتخاب ترندها"></div>
+      <div class="hint">روشن/خاموش کن تا اثر روی ریسک/فرصت/عدم‌قطعیت را ببینی.</div>
+
+      <label for="profileText">مهارت‌ها/رزومه/لینک‌ها</label>
+      <textarea id="profileText" class="input" placeholder="AI, Data, Python, انرژی پاک، لینک GitHub/LinkedIn..."></textarea>
+      <div class="row">
+        <button id="analyzeBtn" class="btn" aria-label="تحلیل مهارت‌ها">تحلیل مهارت</button>
+        <div id="skillNote" class="hint" aria-live="polite">تحلیل محلی و سریع</div>
+      </div>
+
+      <h2 style="margin-top:10px">اندیشکده‌ها و وزن‌دهی دامنه‌ها</h2>
+      <p class="hint">وزن‌ها بر اساس تصمیم/ترند تنظیم می‌شوند و به‌صورت توضیح‌پذیر در ماتریس نمایش داده می‌شوند.</p>
+      <div class="matrix" style="margin-bottom:10px">
+        <table id="matrixTable">
+          <thead>
+            <tr><th>دامنه</th><th>وزن پایه</th><th>وزن پویا</th><th>توضیح</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="chips" id="sourceChips" aria-label="اندیشکده‌های مؤثر"></div>
+
+      <h2 style="margin-top:10px">آستانه هشدار</h2>
+      <div class="row">
+        <div class="col">
+          <label for="thrRisk">آستانه ریسک سیستمی</label>
+          <input id="thrRisk" class="input" type="number" min="0" max="1" step="0.01" value="0.6" />
+        </div>
+        <div class="col">
+          <label for="thrUnc">آستانه عدم‌قطعیت</label>
+          <input id="thrUnc" class="input" type="number" min="0" max="1" step="0.01" value="0.7" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button id="simulate" class="btn primary" aria-label="شبیه‌سازی">شبیه‌سازی</button>
+        <span id="status" class="hint" aria-live="polite">آماده</span>
       </div>
     </div>
-    <hr class="sep" />
-    <h2>دامنه‌های اولویت‌دار و وزن‌دهی</h2>
-    <div id="domainWeights" class="grid"></div>
-    <div class="footer">جمع وزن‌ها اهمیت نسبی حوزه‌ها را نشان می‌دهد؛ تعادلی که منطق تصمیم تو را واقع‌گرایانه می‌کند.</div>
-  </div>
 
-  <div class="section">
-    <h2>ترندها و پیشران‌ها</h2>
-    <div id="trendChips" class="chips"></div>
-    <div class="footer">ترندها روی امتیاز حوزه‌ها اثر ضرب‌کننده دارند؛ با تمرکز انتخاب کن.</div>
-  </div>
+    <!-- Main -->
+    <div class="panel" aria-labelledby="results-title">
+      <h2 id="results-title">نتایج و تحلیل</h2>
 
-  <div class="section">
-    <div class="row">
-      <div>
-        <h2>مهارت‌ها</h2>
-        <div class="input">
-          <label>فهرست مهارت‌های فعلی</label>
-          <textarea id="skills" placeholder="مثلاً: Python, SQL, ارتباط با مشتری, مدیریت پروژه"></textarea>
-          <span class="small">مهارت‌ها را با کاما جدا کن.</span>
+      <div class="kpi" role="group" aria-label="شاخص‌های کلیدی">
+        <div class="kcard">
+          <div class="t">شاخص فرصت</div>
+          <div id="oppVal" style="font-weight:700">—</div>
+          <div class="progress"><span id="oppBar" style="width:0%"></span></div>
+        </div>
+        <div class="kcard">
+          <div class="t">ریسک سیستمی</div>
+          <div id="riskVal" style="font-weight:700">—</div>
+          <div class="progress risk"><span id="riskBar" style="width:0%"></span></div>
+        </div>
+        <div class="kcard">
+          <div class="t">عدم‌قطعیت</div>
+          <div id="uncVal" style="font-weight:700">—</div>
+          <div class="progress neutral"><span id="uncBar" style="width:0%"></span></div>
+        </div>
+        <div class="kcard">
+          <div class="t">امکان‌پذیری (منابع/مهارت)</div>
+          <div id="feasVal" style="font-weight:700">—</div>
+          <div class="progress"><span id="feasBar" style="width:0%"></span></div>
         </div>
       </div>
-      <div>
-        <h2>منابع در دسترس</h2>
-        <div class="grid">
-          <label class="pill"><input id="res-time" type="checkbox" /> زمان هفتگی کافی</label>
-          <label class="pill"><input id="res-budget" type="checkbox" /> بودجه آموزشی</label>
-          <label class="pill"><input id="res-network" type="checkbox" /> شبکه ارتباطی</label>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div class="input">
-            <label>ساعت آزاد هفتگی</label>
-            <input id="hours" type="number" min="0" value="6" />
+
+      <div class="section alerts" style="margin-top:10px">
+        <div id="alertsBox"></div>
+      </div>
+
+      <div class="viz section" aria-label="تصویرسازی‌ها">
+        <div class="canvasWrap">
+          <canvas id="radar" aria-label="نمودار راداری ابعاد"></canvas>
+          <div class="legend">
+            <span class="chip"><span class="dot"></span> امتیاز</span>
+            <span class="chip"><span class="dot" style="background:#ffd28b"></span> باند عدم‌قطعیت</span>
           </div>
-          <div class="input">
-            <label>بودجه ماهانه (یورو)</label>
-            <input id="budget" type="number" min="0" value="150" />
+        </div>
+        <div class="why" aria-label="دلیل نتایج">
+          <h3>چرا این نتیجه؟</h3>
+          <div id="whyList"></div>
+          <div>
+            <div class="hint" style="margin:4px 0 6px">منابع/اندیشکده‌های مؤثر:</div>
+            <div class="srcs" id="whySources"></div>
           </div>
         </div>
       </div>
-    </div>
-    <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
-      <button id="run" class="btn">محاسبه و پیشنهاد</button>
-      <code class="badge" id="status">آماده</code>
-    </div>
-  </div>
 
-  <div class="section">
-    <h2>خلاصه تحلیلی</h2>
-    <div class="kpi">
-      <div class="card">
-        <div class="small">ریسک کلی</div>
-        <div id="kpiRisk" style="font-weight:700">—</div>
+      <div class="timeline section" aria-label="نقشه زمان">
+        <h2>نقشه زمان 2025–2032</h2>
+        <svg id="timelineSvg" viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
-      <div class="card">
-        <div class="small">دامنه غالب</div>
-        <div id="kpiDomain" style="font-weight:700">—</div>
+
+      <div class="section" aria-label="سناریوهای نامتقارن">
+        <h2>سناریوهای نامتقارن</h2>
+        <div id="scenarios" class="actions"></div>
       </div>
-      <div class="card">
-        <div class="small">قدرت امکان‌پذیری</div>
-        <div class="progress"><span id="kpiFeas" style="width:0%"></span></div>
+
+      <div class="section" aria-label="گام‌های پیشنهادی">
+        <h2>گام‌های پیشنهادی 30/90/180 روزه</h2>
+        <div id="actions" class="actions"></div>
       </div>
-      <div class="card">
-        <div class="small">هم‌ترازی ترند</div>
-        <div class="progress"><span id="kpiTrend" class="neutral" style="width:0%"></span></div>
+
+      <div class="section" aria-label="ماتریس منابع">
+        <h2>ماتریس وزن‌دهی منابع</h2>
+        <div class="matrix">
+          <table id="sourceTable">
+            <thead>
+              <tr><th>اندیشکده</th><th>دامنه غالب</th><th>وزن نهایی</th><th>اثر بر تصمیم</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="section">
-    <h2>هشدارهای ریسک</h2>
-    <div id="alerts" class="grid"></div>
-  </div>
-
-  <div class="section">
-    <h2>امتیاز حوزه‌ها</h2>
-    <table class="table" id="scoreTable">
-      <thead>
-        <tr><th>حوزه</th><th>امتیاز</th><th>توضیح</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <div class="section">
-    <h2>گام‌های پیشنهادی ۶ هفته‌ای</h2>
-    <div id="recs" class="recList"></div>
-  </div>
-
-  <div class="section">
-    <h2>ماتریس منابع</h2>
-    <div class="matrix">
-      <div class="box"><strong>کم‌هزینه/کم‌زمان:</strong><div id="mx-easy"></div></div>
-      <div class="box"><strong>پراثر/کم‌زمان:</strong><div id="mx-quick"></div></div>
-      <div class="box"><strong>سرمایه‌گذاری عمیق:</strong><div id="mx-deep"></div></div>
+      <div class="section" aria-label="تحلیل آینده و پیشنهادها">
+        <h2>تحلیل آینده و پیشنهادها</h2>
+        <div id="futureAnalysis" class="analysisBox"></div>
+      </div>
     </div>
   </div>
 
-  <div class="section">
-    <h2>تحلیل آینده و پیشنهادها</h2>
-    <div id="futureAnalysis" class="analysisBox"></div>
-  </div>
-
-  <div class="footer">ساخته شده برای کمک به تصمیم‌گیری‌های معنادار؛ جایی که انتخاب‌ها با آینده گفت‌وگو می‌کنند.</div>
+  <footer>نسخه نهایی نمایشی — آماده اتصال به داده‌های زنده و گزارش‌های رسمی. برای انتشار: همین فایل را در GitHub Pages قرار بده.</footer>
 </div>
 
 <script>
-// داده‌های پایه
-const DOMAINS = [
-  { id:'tech', label:'فناوری و داده' },
-  { id:'market', label:'بازار و محصول' },
-  { id:'people', label:'افراد و شبکه' },
-  { id:'ops', label:'عملیات و اجرا' },
-  { id:'learn', label:'یادگیری و پژوهش' },
-  { id:'brand', label:'برند شخصی' }
-];
-
-const TRENDS = [
-  { id:'ai', name:'هوش مصنوعی مولد', impact:{ tech:1.25, market:1.08, ops:1.1, learn:1.18, brand:1.05 } },
-  { id:'data', name:'حاکمیت داده و حریم خصوصی', impact:{ tech:1.12, ops:1.15, market:1.05 } },
-  { id:'remote', name:'دورکاری و تیم‌های توزیع‌شده', impact:{ people:1.12, ops:1.1, brand:1.05 } },
-  { id:'fin', name:'فناوری مالی', impact:{ market:1.12, tech:1.08 } },
-  { id:'sust', name:'پایداری و ESG', impact:{ market:1.08, ops:1.1, brand:1.06 } },
-  { id:'ed', name:'EdTech و یادگیری تطبیقی', impact:{ learn:1.2, tech:1.06, brand:1.04 } }
-];
-
-const SOURCES = [
-  { domain:'tech', name:'McKinsey Tech Trends' },
-  { domain:'market', name:'Gartner Market Guide' },
-  { domain:'people', name:'Deloitte Human Capital' },
-  { domain:'ops', name:'MIT Sloan Ops Review' },
-  { domain:'learn', name:'OECD Skills Outlook' },
-  { domain:'brand', name:'HBR Personal Branding' }
-];
-
-// ساخت UI وزن‌ها
-const weightsEl = document.getElementById('domainWeights');
-const sliders = {};
-DOMAINS.forEach(d=>{
-  const wrap = document.createElement('div');
-  wrap.className='box';
-  wrap.innerHTML = `
-    <div class="sliderRow">
-      <div>${d.label}</div>
-      <input type="range" min="0" max="100" value="${d.id==='tech'||d.id==='learn'?60:40}" id="w-${d.id}" />
-      <div><span id="v-${d.id}">0</span>%</div>
-    </div>`;
-  weightsEl.appendChild(wrap);
-  sliders[d.id]=wrap.querySelector(`#w-${d.id}`);
-  const v=wrap.querySelector(`#v-${d.id}`);
-  const sync=()=>{v.textContent=sliders[d.id].value;}
-  sliders[d.id].addEventListener('input',sync); sync();
-});
-
-// ترندها
-const trendChips = document.getElementById('trendChips');
-const selectedTrends = new Set();
-TRENDS.forEach(t=>{
-  const lbl = document.createElement('label');
-  lbl.className='chip';
-  lbl.innerHTML = `<input type="checkbox" value="${t.id}" /> ${t.name}`;
-  lbl.querySelector('input').addEventListener('change',e=>{
-    if(e.target.checked) selectedTrends.add(t.id); else selectedTrends.delete(t.id);
-  });
-  trendChips.appendChild(lbl);
-});
-
-// عناصر
-const decisionEl = document.getElementById('decision');
-const horizonEl = document.getElementById('horizon');
-const riskEl = document.getElementById('risk');
-const skillsEl = document.getElementById('skills');
-const hoursEl = document.getElementById('hours');
-const budgetEl = document.getElementById('budget');
-const statusEl = document.getElementById('status');
-
-// خروجی‌ها
-const kpiRiskEl = document.getElementById('kpiRisk');
-const kpiDomainEl = document.getElementById('kpiDomain');
-const kpiFeasBar = document.getElementById('kpiFeas');
-const kpiTrendBar = document.getElementById('kpiTrend');
-const alertsEl = document.getElementById('alerts');
-const scoreTableBody = document.querySelector('#scoreTable tbody');
-const recsEl = document.getElementById('recs');
-
-// ابزارک‌ها
-function parseSkills(){
-  return skillsEl.value.split(/[,\n]/).map(s=>s.trim()).filter(Boolean).map(s=>s.toLowerCase());
-}
-function norm(x, min, max){ return max===min?0: (x-min)/(max-min); }
-function clamp(x,min,max){ return Math.max(min, Math.min(max,x)); }
-
-// محاسبات اصلی
-function computeScores(){
-  const domainW = {};
-  let sumW=0;
-  DOMAINS.forEach(d=>{
-    domainW[d.id]=Number(sliders[d.id].value)/100;
-    sumW += domainW[d.id];
-  });
-  // نرمال‌سازی نرم (بدون جمع الزامی = 1)
-  const risk = riskEl.value;
-  const horizon = Number(horizonEl.value);
-  const skills = parseSkills();
-  const hours = Number(hoursEl.value)||0;
-  const budget = Number(budgetEl.value)||0;
-
-  // تاثیر ترندها
-  const mult = {};
-  DOMAINS.forEach(d=>mult[d.id]=1);
-  selectedTrends.forEach(tr=>{
-    const t = TRENDS.find(x=>x.id===tr);
-    if(!t) return;
-    Object.entries(t.impact).forEach(([k,v])=>{ mult[k] *= v; });
-  });
-
-  // سازگاری مهارت
-  const skillHints = {
-    tech:['python','sql','ml','ai','cloud','api','etl','javascript','typescript'],
-    market:['product','بازاریابی','marketing','seo','discovery','pmf','pricing'],
-    people:['communication','ارتباط','negotiation','coaching','leadership','mentoring'],
-    ops:['project','مدیریت پروژه','kanban','scrum','automation','devops'],
-    learn:['research','تحقیق','statistics','آمار','teaching','teaching assistant','writing'],
-    brand:['content','نوشتن','linkedin','twitter','community','speaking','presentation']
-  };
-  const skillFit = {};
-  DOMAINS.forEach(d=>{
-    const ref = skillHints[d.id]||[];
-    const match = skills.filter(s=>ref.some(r=>s.includes(r))).length;
-    skillFit[d.id] = clamp(0.6 + match*0.08, 0.6, 1.2);
-  });
-
-  // امکان‌پذیری منابع
-  const hasTime = document.getElementById('res-time').checked;
-  const hasBudget = document.getElementById('res-budget').checked;
-  const hasNetwork = document.getElementById('res-network').checked;
-  const feas = clamp(
-    (hasTime?0.25:0) + (hasBudget?0.25:0) + (hasNetwork?0.2:0) +
-    clamp(hours/12,0,0.2) + clamp(budget/200,0,0.1),
-    0, 1
-  );
-
-  // ریسک پایه
-  const baseRisk = {low:0.25, medium:0.5, high:0.75}[risk];
-  const riskAdj = clamp(baseRisk + (selectedTrends.size>=3?0.05:0) + (horizon>=18?0.05:0), 0, 1);
-
-  // امتیاز نهایی هر حوزه
-  const scores = {};
-  DOMAINS.forEach(d=>{
-    const s = (0.5*domainW[d.id] + 0.25*feas + 0.25*norm(skillFit[d.id],0.6,1.2)) * mult[d.id];
-    scores[d.id]= Number((s*100).toFixed(1));
-  });
-
-  // KPI ترند
-  const trendAlign = clamp(Object.values(mult).reduce((a,b)=>a+b,0)/DOMAINS.length - 1, 0, 0.4) / 0.4; // 0..1
-
-  return { domainW, mult, skillFit, scores, feas, riskAdj, trendAlign,
-           profile:{risk, horizon, hours, budget, hasTime, hasBudget, hasNetwork, skills} };
-}
-
-// هشدارها
-function buildAlerts(ctx){
-  const arr=[];
-  const {profile, feas, riskAdj} = ctx;
-  if(profile.horizon<6) arr.push({lvl:'warn', text:'افق زیر ۶ ماه: انتظار نتیجه بزرگ غیرواقعی است. دامنه گام‌ها را کوچک کن.'});
-  if(!profile.hasTime && profile.hours<5) arr.push({lvl:'danger', text:'کمبود زمان: برای پیشرفت پایدار حداقل ۵–۸ ساعت در هفته لازم است.'});
-  if(!profile.hasBudget && profile.budget<50) arr.push({lvl:'warn', text:'بودجه آموزشی محدود: از منابع رایگان و پروژه‌های عملی استفاده کن.'});
-  if(riskAdj>0.7 && selectedTrends.size>=3) arr.push({lvl:'warn', text:'پراکندگی ترندها در ریسک بالا: تمرکز را به ۱–۲ ترند کاهش بده.'});
-  if(feas<0.35) arr.push({lvl:'danger', text:'امکان‌پذیری پایین: ابتدا منابع پایه (زمان/بودجه/شبکه) را تقویت کن.'});
-  return arr;
-}
-
-// جدول امتیاز
-function renderScores(scores, mult, domainW, skillFit){
-  scoreTableBody.innerHTML='';
-  const entries = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  entries.forEach(([id,score])=>{
-    const tr=document.createElement('tr');
-    const d=DOMAINS.find(x=>x.id===id);
-    const why = `وزن: ${(domainW[id]*100).toFixed(0)}% | ترند: ${(mult[id]).toFixed(2)}× | مهارت: ${(skillFit[id]).toFixed(2)}×`;
-    tr.innerHTML=`<td>${d.label}</td><td>${score}</td><td>${why}</td>`;
-    scoreTableBody.appendChild(tr);
-  });
-}
-
-// توصیه‌های ۶ هفته‌ای
-function buildRecs(topDomain, profile){
-  const list=[];
-  const week = (t)=>`تا ${t} روز`;
-  const push=(title, why)=>list.push({title, why});
-  if(topDomain==='tech'){
-    push('پروژه عملی کوچک با داده واقعی', `یک دیتاست عمومی انتخاب کن، خروجی قابل نمایش GitHub ${week(10)}`);
-    push('مدرک کوتاه‌مدت کاربردی', `یک میکرولِرنینگ ۱۵–۲۰ ساعته متناسب با هدف تو ${week(20)}`);
-  } else if(topDomain==='market'){
-    push('مصاحبه اکتشافی با ۱۰ کاربر', `یادگیری عمیق مسئله مشتری و ترسیم فرضیات PMF ${week(14)}`);
-    push('MVP سبک‌وزن', `یک صفحه لندینگ + فرم علاقه‌مندی برای سنجش تقاضا ${week(28)}`);
-  } else if(topDomain==='people'){
-    push('شبکه‌سازی هدفمند ۲۰ تماس', `Warm intro از دوستان درجه دو LinkedIn ${week(21)}`);
-    push('یک جلسه مشاوره معکوس', `از یک منتور بخواه روی مسیرت فیدبک دهد ${week(10)}`);
-  } else if(topDomain==='ops'){
-    push('پیاده‌سازی کانبان شخصی', `پیشبرد کار با WIP محدود + بازبینی هفتگی ${week(7)}`);
-    push('اتوماسیون یک تسک تکراری', `صرفه‌جویی حداقل ۲ ساعت هفتگی با اسکریپت ساده ${week(21)}`);
-  } else if(topDomain==='learn'){
-    push('نقشه یادگیری ۸ هفته‌ای', `سرفصل‌های هفتگی + پروژه پایانی قابل ارائه ${week(7)}`);
-    push('ثبت و به‌اشتراک‌گذاری یادگیری', `هر هفته یک یادداشت منتشر کن برای تثبیت و برند ${week(14)}`);
-  } else if(topDomain==='brand'){
-    push('راه‌اندازی ویترین آنلاین', `به‌روز کردن LinkedIn/GitHub/وب‌سایت و نمونه‌کار ${week(10)}`);
-    push('سری محتوای ۴ بخشی', `یک موضوع محوری و انتشار منظم برای اعتبارسازی ${week(28)}`);
-  }
-  // تنظیم با ریسک
-  if(profile.risk==='low') list.push({title:'خرده‌پیشرفت روزانه ۳۰ دقیقه',
-    why:'تداوم کم‌ریسک اما پایدار؛ عادت‌سازی مهم‌تر از شدت است.'});
-  if(profile.risk==='high') list.push({title:'فرضیه بزرگ با Pilot سریع',
-    why:'یک آزمایش جسورانه اما کوتاه‌مدت برای کشف بازده نامتقارن.'});
-  return list;
-}
-
-// ماتریس منابع
-function renderMatrix(topDomain, profile){
-  const easy = document.getElementById('mx-easy');
-  const quick = document.getElementById('mx-quick');
-  const deep = document.getElementById('mx-deep');
-  const items = {
-    tech:{
-      easy:['مرور ۳ ریپوی برتر GitHub','حل 10 مسئله Leet ساده'],
-      quick:['نمونه API کوچک با مستندات','دیپلوی یک سرویس کوچک'],
-      deep:['دوره تخصصی 40 ساعته','ساخت پروژه پرتفوی با تست']
-    },
-    market:{
-      easy:['تحلیل ۳ رقیب با جدول ساده','ساخت پرسشنامه ۸ سوالی'],
-      quick:['صفحه لندینگ و A/B ساده','کمپین کوچک ایمیل 50 نفر'],
-      deep:['Case Study کامل مشتری','Roadmap سه‌ماهه محصول']
-    },
-    people:{
-      easy:['بهبود پروفایل LinkedIn','پیام شخصی‌سازی شده به 5 نفر'],
-      quick:['حضور در یک رویداد هدفمند','جلسه coffee chat هفتگی'],
-      deep:['ساخت گروه کوچینگ همتا','برنامه منتورینگ دوطرفه']
-    },
-    ops:{
-      easy:['تمپلیت کانبان شخصی','چک‌لیست تحویل کار'],
-      quick:['اتوماسیون گزارش هفتگی','تعریف SLA داخلی'],
-      deep:['بازطراحی فرایند کلیدی','پیاده‌سازی OKR سه‌ماهه']
-    },
-    learn:{
-      easy:['فلش‌کارت مفاهیم کلیدی','خلاصه‌نویسی یک مقاله'],
-      quick:['مطالعه هدایت‌شده با دوست','مرور ویدئوهای منتخب'],
-      deep:['پروژه پژوهشی کوچک','نگارش یادداشت فنی بلند']
-    },
-    brand:{
-      easy:['رزومه یک‌صفحه‌ای به‌روز','پاک‌سازی حضور آنلاین'],
-      quick:['سری 3 پست تخصصی','یک سخنرانی کوتاه ضبط‌شده'],
-      deep:['وب‌سایت شخصی و نمونه‌کار','خبرنامه ماهانه']
-    }
-  }[topDomain] || {easy:[],quick:[],deep:[]};
-
-  const cap = (arr)=>arr.map(x=>`<div>• ${x}</div>`).join('');
-  easy.innerHTML = cap(items.easy);
-  quick.innerHTML = cap(items.quick);
-  deep.innerHTML = cap(items.deep);
-}
-
-// تحلیل آینده و پیشنهادها
-function renderFutureAnalysis(profile, decisionKey, trendKeys, domainW){
-  const box = document.getElementById('futureAnalysis');
-  const horizon = profile.horizon;
-  const riskTol = profile.risk;
-  const topDomain = Object.entries(domainW).sort((a,b)=>b[1]-a[1])[0][0];
-  const domainLabel = DOMAINS.find(d=>d.id===topDomain)?.label || '';
-
-  const trendNames = trendKeys.map(id=>TRENDS.find(t=>t.id===id)?.name).filter(Boolean).join('، ') || '—';
-
-  let html = `<p>با توجه به تصمیم «${decisionKey||'—'}» و افق ${horizon} ماهه، مسیر آینده‌ی تو بیشترین هم‌پوشانی را با حوزه‌ی <strong>${domainLabel}</strong> دارد. روندهای منتخب (${trendNames}) در این بازه بیشترین اثر را خواهند داشت.</p>`;
-
-  const recs = [
-    {
-      text: 'سرمایه‌گذاری روی مهارت‌های مکمل حوزه غالب',
-      reason: `بر اساس گزارش ${SOURCES.find(s=>s.domain===topDomain)?.name||'اندیشکده‌های معتبر'}، ترکیب مهارت‌های فعلی با مهارت‌های نوظهور این حوزه، بازدهی را تا ۳۰٪ افزایش می‌دهد.`
-    },
-    {
-      text: 'ایجاد شبکه ارتباطی در بازارهای هدف',
-      reason: `در سناریوهای با ریسک ${riskTol==='high'?'بالا':'متوسط/کم'}، شبکه‌سازی زودهنگام تاب‌آوری تصمیم را افزایش می‌دهد.`
-    },
-    {
-      text: 'پایش شاخص‌های پیشرو',
-      reason: `با رصد ماهانه شاخص‌های مرتبط با ترندهای انتخابی، امکان واکنش سریع به تغییرات فراهم می‌شود.`
-    }
+  // ---------- Data ----------
+  const DOMAINS = [
+    { id:'tech', label:'فناوری/داده' },
+    { id:'econ', label:'اقتصاد/بازار' },
+    { id:'geo',  label:'ژئو/امنیت' },
+    { id:'clim', label:'اقلیم/پایداری' },
+    { id:'soc',  label:'جامعه/کار' },
   ];
 
-  recs.forEach(r=>{
-    html += `<div class="rec">💡 ${r.text}<div class="reason">${r.reason}</div></div>`;
+  const TRENDS = [
+    { id:'ai',      name:'هوش مصنوعی مولد',       risk:0.2,  opp:0.35, unc:0.15, domain:'tech' },
+    { id:'green',   name:'گذار سبز/کربن‌صفر',     risk:0.18, opp:0.28, unc:0.14, domain:'clim' },
+    { id:'geo',     name:'ریسک ژئوپلیتیک',        risk:0.35, opp:-0.05,unc:0.22, domain:'geo'  },
+    { id:'supply',  name:'زنجیره تأمین نو',       risk:0.22, opp:0.18, unc:0.12, domain:'econ' },
+    { id:'aging',   name:'سالمندی جمعیت',         risk:0.25, opp:0.05, unc:0.10, domain:'soc'  },
+    { id:'bio',     name:'بیو/دیجیتال',           risk:0.15, opp:0.22, unc:0.12, domain:'tech' },
+    { id:'cyber',   name:'امنیت سایبری',          risk:0.20, opp:0.12, unc:0.12, domain:'geo'  },
+    { id:'energy',  name:'انرژی‌های نو',          risk:0.17, opp:0.25, unc:0.12, domain:'clim' },
+    { id:'urban',   name:'شهرهای هوشمند',         risk:0.12, opp:0.14, unc:0.08, domain:'tech' },
+    { id:'fin',     name:'فین‌تک/دارایی دیجیتال', risk:0.22, opp:0.16, unc:0.15, domain:'econ' },
+  ];
+
+  const SOURCES = [
+    { name:'European Commission JRC Strategic Foresight', domain:'econ', w:0.8 },
+    { name:'OECD Strategic Foresight', domain:'econ', w:0.8 },
+    { name:'World Economic Forum', domain:'econ', w:0.7 },
+    { name:'Brookings Institution', domain:'econ', w:0.7 },
+    { name:'RAND Corporation', domain:'geo', w:0.8 },
+    { name:'Chatham House (RIIA)', domain:'geo', w:0.8 },
+    { name:'CSIS', domain:'geo', w:0.85 },
+    { name:'Carnegie Endowment for International Peace', domain:'geo', w:0.75 },
+    { name:'Atlantic Council', domain:'geo', w:0.75 },
+    { name:'Council on Foreign Relations (CFR)', domain:'geo', w:0.7 },
+    { name:'Peterson Institute for International Economics', domain:'econ', w:0.75 },
+    { name:'Bruegel', domain:'econ', w:0.8 },
+    { name:'CEPS', domain:'econ', w:0.7 },
+    { name:'SWP (German Institute for International and Security Affairs)', domain:'geo', w:0.8 },
+    { name:'Bertelsmann Stiftung', domain:'soc', w:0.65 },
+    { name:'Kiel Institute (IfW Kiel)', domain:'econ', w:0.7 },
+    { name:'DIW Berlin', domain:'econ', w:0.7 },
+    { name:'Clingendael Institute', domain:'geo', w:0.7 },
+    { name:'IFRI', domain:'geo', w:0.7 },
+    { name:'IISS', domain:'geo', w:0.75 },
+    { name:'SIPRI', domain:'geo', w:0.75 },
+    { name:'GMF (German Marshall Fund)', domain:'geo', w:0.7 },
+    { name:'MERICS', domain:'geo', w:0.7 },
+    { name:'Lowy Institute', domain:'geo', w:0.7 },
+    { name:'ASPI', domain:'geo', w:0.7 },
+    { name:'NBR', domain:'geo', w:0.7 },
+    { name:'Nesta', domain:'tech', w:0.7 },
+    { name:'IFTF (Institute for the Future)', domain:'tech', w:0.75 },
+    { name:'Oxford Martin School', domain:'tech', w:0.75 },
+    { name:'Fraunhofer ISI', domain:'tech', w:0.8 },
+    { name:'Copenhagen Institute for Futures Studies', domain:'tech', w:0.75 },
+    { name:'McKinsey Global Institute (MGI)', domain:'econ', w:0.8 },
+    { name:'EPRS (European Parliamentary Research Service)', domain:'econ', w:0.7 },
+    { name:'Carnegie Europe', domain:'geo', w:0.7 },
+    { name:'Urban Institute', domain:'soc', w:0.6 },
+    { name:'Demos', domain:'soc', w:0.6 },
+    { name:'AEI', domain:'econ', w:0.6 }
+  ];
+
+  // ---------- UI Elements ----------
+  const decisionEl = document.getElementById('decision');
+  const riskEl = document.getElementById('risk');
+  const horizonEl = document.getElementById('horizon');
+  const profileText = document.getElementById('profileText');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const skillNote = document.getElementById('skillNote');
+
+  const trendChips = document.getElementById('trendChips');
+  const selectedTrends = new Set(['ai','green','geo','supply']); // default
+
+  const matrixTableBody = document.querySelector('#matrixTable tbody');
+  const sourceChips = document.getElementById('sourceChips');
+
+  const oppVal = document.getElementById('oppVal');
+  const oppBar = document.getElementById('oppBar');
+  const riskVal = document.getElementById('riskVal');
+  const riskBar = document.getElementById('riskBar');
+  const uncVal = document.getElementById('uncVal');
+  const uncBar = document.getElementById('uncBar');
+  const feasVal = document.getElementById('feasVal');
+  const feasBar = document.getElementById('feasBar');
+
+  const alertsBox = document.getElementById('alertsBox');
+
+  const radar = document.getElementById('radar');
+  const rctx = radar.getContext('2d');
+
+  const whyList = document.getElementById('whyList');
+  const whySources = document.getElementById('whySources');
+  const timelineSvg = document.getElementById('timelineSvg');
+  const scenariosEl = document.getElementById('scenarios');
+  const actionsEl = document.getElementById('actions');
+  const sourceTableBody = document.querySelector('#sourceTable tbody');
+  const futureAnalysis = document.getElementById('futureAnalysis');
+
+  const thrRiskEl = document.getElementById('thrRisk');
+  const thrUncEl = document.getElementById('thrUnc');
+  const statusEl = document.getElementById('status');
+
+  const saveBtn = document.getElementById('saveBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const themeToggle = document.getElementById('themeToggle');
+
+  // ---------- Helpers ----------
+  const dpi = window.devicePixelRatio || 1;
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function pct(x){ return Math.round(clamp01(x)*100); }
+
+  function renderTrendChips(){
+    trendChips.innerHTML = '';
+    TRENDS.forEach(t=>{
+      const on = selectedTrends.has(t.id);
+      const el = document.createElement('span');
+      el.className = 'chip';
+      el.setAttribute('role','checkbox');
+      el.setAttribute('aria-checked', on ? 'true':'false');
+      el.style.borderColor = on ? '#2a7b5f' : 'var(--border)';
+      el.style.boxShadow = on ? '0 0 18px rgba(126,231,135,0.15) inset' : 'none';
+      el.innerHTML = `<span class="dot" style="background:${on?'#7ee787':'#6b7280'}"></span>${t.name}`;
+      el.addEventListener('click', ()=>{
+        if(on) selectedTrends.delete(t.id); else selectedTrends.add(t.id);
+        renderTrendChips();
+      });
+      trendChips.appendChild(el);
+    });
+  }
+  function renderSourceChips(){
+    sourceChips.innerHTML='';
+    SOURCES.forEach(s=>{
+      const clr = s.domain==='econ'?'#7ee787': s.domain==='geo'?'#ffb4b4': s.domain==='tech'?'#7aa2f7': s.domain==='clim'?'#ffd28b':'#c0a6ff';
+      const chip = document.createElement('span'); chip.className='chip'; chip.title=s.name;
+      chip.innerHTML = `<span class="dot" style="background:${clr}"></span>${s.name}`;
+      sourceChips.appendChild(chip);
+    });
+  }
+
+  // ---------- Radar ----------
+  const DIMENSIONS = [
+    { id:'career', label:'شغل/مهارت' },
+    { id:'wealth', label:'ثروت/سرمایه' },
+    { id:'well', label:'رفاه/سلامت' },
+    { id:'impact', label:'پایداری/اثر' },
+    { id:'res', label:'تاب‌آوری' },
+  ];
+  let scores = { career:0.6, wealth:0.55, well:0.58, impact:0.62, res:0.57 };
+  let bands  = { career:0.12, wealth:0.1,  well:0.11, impact:0.09, res:0.1  };
+
+  function resizeRadar(){
+    const rect = radar.getBoundingClientRect();
+    radar.width = rect.width * dpi;
+    radar.height = rect.height * dpi;
+    rctx.setTransform(dpi,0,0,dpi,0,0);
+    drawRadar();
+  }
+  window.addEventListener('resize', resizeRadar);
+
+  function drawRadar(){
+    const w = radar.width/dpi, h = radar.height/dpi;
+    rctx.clearRect(0,0,w,h);
+    const cx = w/2, cy = h/2 + 8;
+    const R = Math.min(w,h)*0.36;
+
+    rctx.save();
+    rctx.strokeStyle = 'rgba(180,200,240,0.25)';
+    for(let r=1; r<=4; r++){
+      rctx.beginPath();
+      const rr = R * (r/4);
+      DIMENSIONS.forEach((d,i)=>{
+        const ang = (Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+        const x=cx+rr*Math.cos(ang), y=cy+rr*Math.sin(ang);
+        i===0? rctx.moveTo(x,y) : rctx.lineTo(x,y);
+      });
+      rctx.closePath(); rctx.stroke();
+    }
+    DIMENSIONS.forEach((d,i)=>{
+      const ang=(Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+      const x=cx+R*Math.cos(ang), y=cy+R*Math.sin(ang);
+      rctx.beginPath(); rctx.moveTo(cx,cy); rctx.lineTo(x,y);
+      rctx.strokeStyle='rgba(180,200,240,0.18)'; rctx.stroke();
+      const lx=cx+(R+18)*Math.cos(ang), ly=cy+(R+18)*Math.sin(ang);
+      rctx.fillStyle='#cfe3ff'; rctx.font='12px sans-serif';
+      rctx.textAlign = Math.cos(ang)>0.2? 'left' : (Math.cos(ang)<-0.2?'right':'center');
+      rctx.fillText(d.label,lx,ly);
+    });
+
+    // uncertainty band
+    rctx.beginPath();
+    DIMENSIONS.forEach((d,i)=>{
+      const v = clamp01(scores[d.id] + bands[d.id]);
+      const ang=(Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+      const x=cx+R*v*Math.cos(ang), y=cy+R*v*Math.sin(ang);
+      i===0? rctx.moveTo(x,y) : rctx.lineTo(x,y);
+    });
+    rctx.closePath();
+    rctx.fillStyle='rgba(255,210,139,0.18)'; rctx.fill();
+
+    // polygon
+    rctx.beginPath();
+    DIMENSIONS.forEach((d,i)=>{
+      const v = clamp01(scores[d.id]);
+      const ang=(Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+      const x=cx+R*v*Math.cos(ang), y=cy+R*v*Math.sin(ang);
+      i===0? rctx.moveTo(x,y) : rctx.lineTo(x,y);
+    });
+    rctx.closePath();
+    const grad=rctx.createLinearGradient(0,0,w,h);
+    grad.addColorStop(0,'rgba(126,231,135,0.28)');
+    grad.addColorStop(1,'rgba(122,162,247,0.28)');
+    rctx.fillStyle=grad; rctx.fill();
+    rctx.strokeStyle='rgba(126,231,135,0.7)'; rctx.lineWidth=2; rctx.stroke();
+
+    rctx.restore();
+  }
+
+  // ---------- Domain weights ----------
+  function decisionPrefs(dec){
+    switch(dec){
+      case 'career': return { tech:0.32, econ:0.22, soc:0.18, geo:0.14, clim:0.14 };
+      case 'startup':return { tech:0.30, econ:0.28, soc:0.12, geo:0.14, clim:0.16 };
+      case 'invest': return { econ:0.36, geo:0.22, tech:0.20, clim:0.12, soc:0.10 };
+      case 'relocate':return{ soc:0.26, econ:0.22, geo:0.22, tech:0.16, clim:0.14 };
+      case 'learn':  return { tech:0.36, econ:0.18, soc:0.20, geo:0.12, clim:0.14 };
+      default:       return { tech:0.28, econ:0.24, geo:0.18, clim:0.16, soc:0.14 };
+    }
+  }
+  function dynamicDomainWeights(dec, trendSet){
+    const base = decisionPrefs(dec);
+    const w = { tech:base.tech||0, econ:base.econ||0, geo:base.geo||0, clim:base.clim||0, soc:base.soc||0 };
+    trendSet.forEach(id=>{
+      const t = TRENDS.find(x=>x.id===id); if(!t) return;
+      w[t.domain] += 0.06; // emphasize aligned domain
+    });
+    const sum = Object.values(w).reduce((a,b)=>a+b,0)||1;
+    for(const k in w) w[k]=w[k]/sum;
+    return w;
+  }
+  function renderDomainMatrix(domainWeights, dec){
+    matrixTableBody.innerHTML='';
+    const notes = { econ:'رشد/تورم/بهره و بازارها', geo:'درگیری‌ها/وابستگی و امنیت', tech:'بهره‌وری/اتوماسیون و رقابت', clim:'مقررات/ESG و انرژی', soc:'جمعیت/مهارت و عدالت' };
+    DOMAINS.forEach(d=>{
+      const tr=document.createElement('tr');
+      const base = decisionPrefs(dec)[d.id]||0;
+      const dyn  = domainWeights[d.id]||0;
+      tr.innerHTML = `<td>${d.label}</td><td>${base.toFixed(2)}</td><td>${dyn.toFixed(2)}</td><td>${notes[d.id]}</td>`;
+      matrixTableBody.appendChild(tr);
+    });
+  }
+  function renderSourceTable(domainWeights){
+    sourceTableBody.innerHTML='';
+    SOURCES.forEach(s=>{
+      const dw = domainWeights[s.domain]||0.2;
+      const finalW = (s.w * (0.6 + 0.4*dw));
+      const tr = document.createElement('tr');
+      const label = DOMAINS.find(d=>d.id===s.domain)?.label || s.domain;
+      tr.innerHTML = `<td>${s.name}</td><td>${label}</td><td>${finalW.toFixed(2)}</td><td>${finalW>0.65?'اثر قوی':'اثر متوسط'}</td>`;
+      sourceTableBody.appendChild(tr);
+    });
+  }
+
+  // ---------- Skills parsing ----------
+  const SKILL_MAP = [
+    { keys:['ai','ml','machine learning','هوش','python','pytorch','tensorflow','data','داده'], dim:'career', delta:0.06, domain:'tech' },
+    { keys:['climate','energy','esg','سازگاری','انرژی','اقلیم','پایداری'], dim:'impact', delta:0.05, domain:'clim' },
+    { keys:['product','design','ux','ui','figma','طراحی','محصول'], dim:'career', delta:0.03, domain:'tech' },
+    { keys:['security','امنیت','cyber','devsecops'], dim:'res', delta:0.05, domain:'geo' },
+    { keys:['finance','quant','valuation','مالی','پرتفو'], dim:'wealth', delta:0.05, domain:'econ' },
+    { keys:['health','سلامت','bio','biology'], dim:'well', delta:0.03, domain:'soc' },
+  ];
+  function analyzeSkills(text){
+    const t = (text||'').toLowerCase();
+    return SKILL_MAP.filter(s=> s.keys.some(k=>t.includes(k)));
+  }
+  analyzeBtn.addEventListener('click', ()=>{
+    const hits = analyzeSkills(profileText.value);
+    if(hits.length===0) skillNote.textContent = 'مهارت مشخصی پیدا نشد. چند کلیدواژه اضافه کن.';
+    else {
+      const labs = Array.from(new Set(hits.flatMap(h=>h.keys.slice(0,1))));
+      skillNote.textContent = `مهارت‌های شناسایی: ${labs.slice(0,6).join(', ')}${hits.length>6? ' +' + (hits.length-6) : ''}`;
+    }
   });
-  box.innerHTML = html;
-}
 
-// رندر KPI
-function renderKPI(ctx){
-  const {scores, feas, riskAdj, trendAlign} = ctx;
-  const top = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0];
-  const topLabel = DOMAINS.find(d=>d.id===top[0])?.label || '—';
-  kpiDomainEl.textContent = topLabel;
-  kpiRiskEl.textContent = riskAdj<0.4?'پایین':(riskAdj<0.7?'متوسط':'بالا');
-  kpiFeasBar.style.width = Math.round(feas*100)+'%';
-  kpiTrendBar.style.width = Math.round(trendAlign*100)+'%';
-  kpiTrendBar.className = trendAlign<0.33?'neutral':(trendAlign<0.66?'neutral':'');
-}
+  // ---------- Timeline ----------
+  function renderTimeline(){
+    const years=[2025,2026,2027,2028,2029,2030,2031,2032];
+    const w=900,h=140,pad=60; timelineSvg.innerHTML='';
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',pad); line.setAttribute('y1',h/2);
+    line.setAttribute('x2',w-pad); line.setAttribute('y2',h/2);
+    line.setAttribute('stroke','#2b3a55'); line.setAttribute('stroke-width','2');
+    timelineSvg.appendChild(line);
+    years.forEach((y,i)=>{
+      const x = pad + i*((w-2*pad)/(years.length-1));
+      const tick=document.createElementNS('http://www.w3.org/2000/svg','line');
+      tick.setAttribute('x1',x); tick.setAttribute('y1',h/2-8);
+      tick.setAttribute('x2',x); tick.setAttribute('y2',h/2+8);
+      tick.setAttribute('stroke','#3b5177'); tick.setAttribute('stroke-width','2');
+      timelineSvg.appendChild(tick);
+      const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',x); txt.setAttribute('y',h/2+28);
+      txt.setAttribute('text-anchor','middle'); txt.setAttribute('class','tick');
+      txt.textContent=y; timelineSvg.appendChild(txt);
+    });
+    const markers=[
+      { y:2025, label:'MVP/پروتوتایپ مهارت', tone:'#7ee787' },
+      { y:2026, label:'اعتبارسنجی بازار/شبکه', tone:'#7aa2f7' },
+      { y:2027, label:'گسترش/تنوع‌بخشی', tone:'#ffd28b' },
+      { y:2029, label:'تاب‌آوری/ریسک ژئو', tone:'#ffb4b4' },
+      { y:2031, label:'استاندارد/ESG', tone:'#aef7d3' },
+    ];
+    markers.forEach(m=>{
+      const i = years.indexOf(m.y); if(i<0) return;
+      const x = pad + i*((w-2*pad)/(years.length-1));
+      const cy=56;
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',x); c.setAttribute('cy',cy); c.setAttribute('r','7'); c.setAttribute('fill',m.tone);
+      timelineSvg.appendChild(c);
+      const lab=document.createElementNS('http://www.w3.org/2000/svg','text');
+      lab.setAttribute('x',x); lab.setAttribute('y',cy-12);
+      lab.setAttribute('text-anchor','middle'); lab.setAttribute('class','tick');
+      lab.textContent=m.label; timelineSvg.appendChild(lab);
+    });
+  }
 
-// رویداد اصلی
-function runAll(){
-  statusEl.textContent='در حال محاسبه…';
-  const ctx = computeScores();
+  // ---------- Alerts ----------
+  function renderAlerts(systemicRisk, unc, activeTrends){
+    alertsBox.innerHTML='';
+    const thrR = parseFloat(thrRiskEl.value)||0.6;
+    const thrU = parseFloat(thrUncEl.value)||0.7;
+    const ids = new Set(activeTrends);
 
-  // هشدارها
-  const warnings = buildAlerts(ctx);
-  alertsEl.innerHTML = warnings.length
-    ? warnings.map(w=>`<div class="alert ${w.lvl}">⚠️ ${w.text}</div>`).join('')
-    : `<div class="alert">همه‌چیز باثبات به نظر می‌رسد؛ اجرای منظم را ادامه بده.</div>`;
+    const push = (cls, txt) => {
+      const el=document.createElement('div'); el.className='alert '+cls; el.innerHTML = `⚠️ ${txt}`; alertsBox.appendChild(el);
+    };
 
-  // جدول امتیاز
-  renderScores(ctx.scores, ctx.mult, ctx.domainW, ctx.skillFit);
+    if(systemicRisk>=thrR) push('danger','ریسک سیستمی بالاست. پوشش‌ریسک و گزینه توقف سریع تعریف کن.');
+    if(unc>=thrU) push('warn','عدم‌قطعیت زیاد است؛ آزمایش‌های کوچک، تصمیم‌های قابل‌برگشت.');
+    if(ids.has('geo') && ids.has('energy')) push('warn','ترکیب ژئو + انرژی می‌تواند نوسان زیرساخت/قیمت بسازد. برنامه انعطاف‌پذیری آماده کن.');
+    if(ids.has('ai') && ids.has('cyber')) push('warn','اتوماسیون + ریسک سایبری: کنترل دسترسی/ممیزی داده را تقویت کن.');
 
-  // KPI
-  renderKPI(ctx);
+    if(!alertsBox.children.length){
+      const ok=document.createElement('div'); ok.className='alert ok';
+      ok.textContent='وضعیت پایدار: هشدار فعالی وجود ندارد. پایش مستمر ادامه یابد.'; alertsBox.appendChild(ok);
+    }
+  }
 
-  // توصیه‌ها
-  const topDomain = Object.entries(ctx.scores).sort((a,b)=>b[1]-a[1])[0][0];
-  const list = buildRecs(topDomain, ctx.profile);
-  recsEl.innerHTML = list.map(i=>`<div class="recItem"><strong>• ${i.title}</strong><div class="why">${i.why}</div></div>`).join('');
+  // ---------- Actions ----------
+  function renderActions(decision, riskTol){
+    const acts=[];
+    acts.push({
+      horizon:'۳۰ روزه',
+      title: decision==='career' ? 'نمونه‌کار هدفمند + ۳ گفت‌وگوی اطلاعاتی' :
+             decision==='startup'? 'مصاحبه ۱۰ مشتری + MVP کاغذی' :
+             decision==='invest' ? 'IPS یک‌صفحه‌ای + معیارهای ریسک' :
+             decision==='relocate'? 'تحلیل ۳ شهر با ماتریس امتیازدهی' :
+             'دوره ۲۰ ساعته مهارت کلیدی + تمرین',
+      tip: decision==='startup'? 'معیار درد/تکرار/بودجه را برای اولویت مشکل بسنج.' :
+           decision==='career' ? '۳ شغل هدف = ۳ نمونه‌کار مطابق JD.' :
+           'بازخورد سریع بگیر و مسیر را اصلاح کن.',
+      impact:'اثر: متوسط', difficulty:'دشواری: کم'
+    });
+    acts.push({
+      horizon:'۹۰ روزه',
+      title: decision==='career' ? 'گواهی معتبر + ۲ پروژه مشترک/متن‌باز' :
+             decision==='startup'? 'MVP واقعی + ۳۰ کاربر آزمایشی' :
+             decision==='invest' ? 'تنوع‌بخشی + سقف زیان تعریف‌شده' :
+             decision==='relocate'? 'سفر اکتشافی + رویداد شبکه محلی' :
+             'پروژه capstone با منتور',
+      tip:'یک شاخص موفقیت واحد انتخاب کن و هفتگی پایش کن.',
+      impact:'اثر: بالا', difficulty:'دشواری: متوسط'
+    });
+    acts.push({
+      horizon:'۱۸۰ روزه',
+      title: decision==='career' ? 'جایگذاری در نقش هدف/ارتقا' :
+             decision==='startup'? 'MRR با چرخه ساخت/اندازه‌گیری' :
+             decision==='invest' ? 'پوشش‌ریسک حداقلی + بازمتوازن‌سازی' :
+             decision==='relocate'? 'جابجایی با برنامه مالی/اجتماعی' :
+             'ارائه عمومی + شبکه حامیان',
+      tip: riskTol==='high' ? 'آزمایش‌های آپساید با سقف زیان مشخص.' : 'ذخیره زمانی/مالی برای تاب‌آوری نگه‌دار.',
+      impact:'اثر: بسیار بالا', difficulty:'دشواری: متوسط/بالا'
+    });
 
-  // ماتریس
-  renderMatrix(topDomain, ctx.profile);
+    actionsEl.innerHTML='';
+    acts.forEach(a=>{
+      const card=document.createElement('div'); card.className='actionCard';
+      card.innerHTML=`
+        <div class="pill"><span style="width:8px;height:8px;background:#7aa2f7;border-radius:50%"></span>${a.horizon}</div>
+        <div style="font-weight:700">${a.title}</div>
+        <div class="hint">${a.tip}</div>
+        <div class="row" style="justify-content:space-between;margin-top:4px">
+          <span class="pill impact">⚡ ${a.impact}</span>
+          <span class="pill difficulty">🧩 ${a.difficulty}</span>
+        </div>`;
+      actionsEl.appendChild(card);
+    });
+  }
 
-  // تحلیل آینده
-  renderFutureAnalysis(
-    { horizon: Number(horizonEl.value), risk: riskEl.value },
-    decisionEl.value,
-    Array.from(selectedTrends),
-    ctx.domainW
-  );
+  // ---------- Scenarios ----------
+  function renderScenarios(dec, risk, opp, unc){
+    const baseP = clamp01(0.6 - (unc-0.4)*0.5);
+    const upP   = clamp01(0.2 + (opp-0.55)*0.4);
+    const downP = clamp01(0.2 + (risk-0.45)*0.5);
+    const sum = baseP+upP+downP || 1;
+    const P = { up: upP/sum, base: baseP/sum, down: downP/sum };
 
-  statusEl.textContent='آماده';
-}
+    const defs = [
+      { id:'up',   label:'Upside (اثر زیاد/احتمال کم)', color:'#aef7d3', prob:P.up,
+        tip:'آزمایش‌های کم‌هزینه با آپساید بزرگ؛ مزیت داده/مالکیت فکری بساز.' },
+      { id:'base', label:'Base (محتمل‌ترین)',            color:'#7aa2f7', prob:P.base,
+        tip:'بهینه‌سازی جریان کار، شاخص‌های پیشرو را هفتگی رصد کن.' },
+      { id:'down', label:'Downside (ریسک دنباله)',       color:'#ffb4b4', prob:P.down,
+        tip:'پوشش‌ریسک، کاهش هزینه ثابت، گزینه توقف سریع.' },
+    ];
 
-// تعاملات
-document.getElementById('run').addEventListener('click', runAll);
-[decisionEl, horizonEl, riskEl, skillsEl, hoursEl, budgetEl].forEach(el=>{
-  el.addEventListener('change', ()=>{ /* محاسبه تنبل؛ فقط با دکمه محاسبه کامل می‌کنیم */ });
-});
-// محاسبه اولیه
-runAll();
-</script>
-</body>
-</html>
+    scenariosEl.innerHTML='';
+    defs.forEach(s=>{
+      const card=document.createElement('div'); card.className='actionCard';
+      card.innerHTML=`
+        <div class="pill"><span style="width:8px;height:8px;background:${s.color};border-radius:50%"></span>${s.label} — احتمال: ${(s.prob*100|0)}%</div>
+        <div class="hint">${s.tip}</div>`;
+      scenariosEl.appendChild(card);
+    });
+  }
+
+  // ---------- Why Panel ----------
+  function renderWhy(dec, riskTol, horizon, unc, domainW){
+    const reasons = [
+      { title:'وزن‌دهی دامنه‌ها', detail:`Tech:${(domainW.tech||0).toFixed(2)} Econ:${(domainW.econ||0).toFixed(2)} Geo:${(domainW.geo||0).toFixed(2)} Clim:${(domainW.clim||0).toFixed(2)} Soc:${(domainW.soc||0).toFixed(2)}`, weight:0.30 },
+      { title:'اثر ترندهای فعال', detail:`ترندهای انتخابی فرصت/ریسک را تغییر داده‌اند. عدم‌قطعیت فعلی: ${pct(unc)}%`, weight:0.26 },
+      { title:'تناسب مهارت‌ها', detail:'مهارت‌های شناسایی‌شده به ابعاد امتیاز نگاشت شده‌اند.', weight:0.20 },
+      { title:'افق زمانی', detail:`افق ${horizon} ماهه دامنه باند عدم‌قطعیت را تغییر داده است.`, weight:0.14 },
+      { title:'تحمل ریسک', detail:`تنظیم ${riskTol==='low'?'محافظه‌کارانه':(riskTol==='high'?'تهاجمی':'متعادل')} در وزن‌دهی لحاظ شد.`, weight:0.10 },
+    ];
+    whyList.innerHTML='';
+    reasons.forEach(r=>{
+      const row=document.createElement('div'); row.className='reason';
+      row.innerHTML=`
+        <div style="min-width:8px;height:8px;background:#7ee787;border-radius:50%;margin-top:6px"></div>
+        <div style="flex:1">
+          <div style="color:#cfe3ff;font-size:13px;margin-bottom:4px">${r.title}</div>
+          <div class="hint" style="margin-bottom:8px">${r.detail}</div>
+          <div class="bar"><span style="width:${Math.round(r.weight*100)}%"></span></div>
+        </div>`;
+      whyList.appendChild(row);
+    });
+
+    // منابع مؤثر (مرتب‌شده بر اساس دامنه‌های پر وزن)
+    whySources.innerHTML='';
+    const sortedDomains = Object.entries(domainW).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+    const pool = SOURCES.slice().sort((a,b)=> sortedDomains.indexOf(a.domain) - sortedDomains.indexOf(b.domain));
+    pool.slice(0,16).forEach(s=>{
+      const clr = s.domain==='econ'?'#7ee787': s.domain==='geo'?'#ffb4b4': s.domain==='tech'?'#7aa2f7': s.domain==='clim'?'#ffd28b':'#c0a6ff';
+      const chip=document.createElement('span'); chip.className='chip';
+      chip.innerHTML=`<span class="dot" style="background:${clr}"></span>${s.name}`;
+      whySources.appendChild(chip);
+    });
+  }
+
+  // ---------- Future Analysis ----------
+  function renderFutureText(profile, decisionKey, trendKeys, domainW){
+    const topDomain = Object.entries(domainW).sort((a,b)=>b[1]-a[1])[0][0];
+    const domainLabel = DOMAINS.find(d=>d.id===topDomain)?.label || '';
+    const trends = trendKeys.map(id=>TRENDS.find(t=>t.id===id)?.name).filter(Boolean).join('، ') || '—';
+    const riskLabel = profile.risk==='high'?'بالا':(profile.risk==='low'?'کم':'متوسط');
+    const src = (SOURCES.find(s=>s.domain===topDomain)?.name)||'اندیشکده‌های معتبر';
+
+    let html = `<p>اگر این مسیر «${decisionKey||'—'}» را با افق ${profile.horizon} ماهه ادامه بدهی، محتمل‌ترین کانون اثر تو حوزه <strong>${domainLabel}</strong> خواهد بود. ترندهای فعال (${trends}) در این بازه بیشترین نقش را بازی می‌کنند. با ریسک ${riskLabel}، توصیه‌های زیر بیشترین نسبت اثر/هزینه را دارند:</p>`;
+
+    const recs = [
+      { t:'تقویت مهارت مکمل در حوزه غالب', r:`بر اساس ${src}، ترکیب مهارت‌های فعلی با مهارت‌های نوظهور حوزه غالب می‌تواند بازدهی را تا حدود ۳۰٪ افزایش دهد. مسیر یادگیری فشرده ۸–۱۰ هفته‌ای تنظیم کن.` },
+      { t:'شبکه‌سازی هدفمند زودهنگام', r:`در محیط‌های با ریسک ${riskLabel}، شبکه‌های قوی، تاب‌آوری تصمیم را افزایش می‌دهند. هر هفته ۲ ارتباط جدید + ۱ گفت‌وگوی اطلاعاتی.` },
+      { t:'پایش شاخص‌های پیشرو', r:'ماهانه یک داشبورد کوچک از ۳ شاخص مرتبط با ترندها بساز (مثلاً سرمایه‌گذاری در AI/انرژی پاک/شاخص ریسک ژئو) تا زودتر از بازار واکنش نشان دهی.' },
+      { t:'آزمایش‌های کوچک قابل برگشت', r:'به‌جای تعهد سنگین، آزمایش‌های ۲–۳ هفته‌ای با معیار موفقیت روشن انجام بده و براساس داده تصمیم بگیر.' },
+    ];
+
+    futureAnalysis.innerHTML='';
+    futureAnalysis.innerHTML += html;
+    recs.forEach(x=>{
+      const item = document.createElement('div'); item.className='rec';
+      item.innerHTML = `💡 ${x.t}<div class="reason">${x.r}</div>`;
+      futureAnalysis.appendChild(item);
+    });
+  }
+
+  // ---------- Simulation pipeline ----------
+  function compute(){
+    const decRaw = (decisionEl.value||'').trim();
+    const decision = decRaw.toLowerCase().includes('استارتاپ') ? 'startup'
+                   : decRaw.toLowerCase().includes('سرمایه') ? 'invest'
+                   : decRaw.toLowerCase().includes('مهاج') ? 'relocate'
+                   : decRaw.toLowerCase().includes('یاد') ? 'learn'
+                   : 'career';
+
+    const riskTol = riskEl.value;
+    const horizon = Number(horizonEl.value);
+    const activeTrends = Array.from(selectedTrends);
+
+    // domain weights
+    const domainW = dynamicDomainWeights(decision, selectedTrends);
+    renderDomainMatrix(domainW, decision);
+    renderSourceTable(domainW);
+
+    // baseline scores by decision
+    const base = (()=>{
+      switch(decision){
+        case 'career': return { career:0.62, wealth:0.55, well:0.60, impact:0.58, res:0.57 };
+        case 'startup':return { career:0.58, wealth:0.60, well:0.52, impact:0.64, res:0.55 };
+        case 'invest': return { career:0.52, wealth:0.65, well:0.56, impact:0.50, res:0.58 };
+        case 'relocate':return { career:0.60, wealth:0.56, well:0.62, impact:0.55, res:0.60 };
+        case 'learn':  return { career:0.66, wealth:0.54, well:0.60, impact:0.58, res:0.56 };
+        default: return { career:0.58, wealth:0.58, well:0.58, impact:0.58, res:0.58 };
+      }
+    })();
+
+    scores = {...base};
+    let opportunity = 0.58, systemicRisk = 0.38;
+
+    // trend contributions with domain modulation
+    activeTrends.forEach(id=>{
+      const t = TRENDS.find(x=>x.id===id); if(!t) return;
+      const domFactor = (domainW[t.domain]||0.2) + 0.6; // 0.6..1.6
+      opportunity += t.opp * 0.36 * domFactor/(1 + activeTrends.length*0.25);
+      systemicRisk += t.risk * 0.42 * domFactor/(1 + activeTrends.length*0.25);
+
+      scores.career += (t.opp - t.risk*0.12)*0.18*domFactor;
+      scores.wealth += (t.opp - t.risk*0.10)*0.22*domFactor;
+      scores.impact += (t.opp)*0.20*domFactor;
+      scores.res    += (0.10 - t.risk*0.16)*domFactor;
+      scores.well   +=
