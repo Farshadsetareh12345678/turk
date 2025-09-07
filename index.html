@@ -1,47 +1,23 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 دستیار پیشرفته تریدر</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Assistant</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="overlay"></div>
-    <div class="container">
-        <h1 class="fade-in">📊 دستیار پیشرفته تریدر</h1>
+  <video autoplay muted loop id="bg-video">
+    <source src="assets/background.mp4" type="video/mp4" />
+  </video>
 
-        <section class="card slide-up">
-            <h2>انتخاب ارز</h2>
-            <select id="coinSelect" onchange="updateChart()">
-                <option value="bitcoin">Bitcoin (BTC)</option>
-                <option value="ethereum">Ethereum (ETH)</option>
-                <option value="dogecoin">Dogecoin (DOGE)</option>
-                <option value="litecoin">Litecoin (LTC)</option>
-            </select>
-        </section>
+  <div class="overlay">
+    <h1>دستیار تریدر کریپتو 🚀</h1>
+    <p>تحلیل کن، تصمیم بگیر، سود بساز</p>
+    <button onclick="showPrices()">📈 نمایش قیمت‌ها</button>
+    <div id="prices"></div>
+  </div>
 
-        <section class="card slide-up">
-            <h2>قیمت لحظه‌ای</h2>
-            <p id="livePrice" class="price">در حال بارگذاری...</p>
-        </section>
-
-        <section class="card slide-up">
-            <h2>نمودار قیمت</h2>
-            <canvas id="priceChart" height="200"></canvas>
-        </section>
-
-        <section class="card slide-up">
-            <h2>ماشین‌حساب سود/ضرر</h2>
-            <input type="number" id="buyPrice" placeholder="قیمت خرید">
-            <input type="number" id="sellPrice" placeholder="قیمت فروش">
-            <input type="number" id="amount" placeholder="تعداد/حجم">
-            <button class="glow-btn" onclick="calculateProfit()">محاسبه</button>
-            <p id="result"></p>
-        </section>
-    </div>
-
-    <script src="chart.min.js"></script>
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
