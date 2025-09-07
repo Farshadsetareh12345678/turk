@@ -1,593 +1,816 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>آینه آینده X — شبیه‌ساز تصمیمات 2030+</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg1: #0f2027; --bg2: #203a43; --bg3: #2c5364; --bg4: #1a1a2e;
-    --glass: rgba(255,255,255,0.08);
-    --border: rgba(255,255,255,0.16);
-    --text: #f1f5ff; --muted: #b3bed6; --heading: #8f7cff;
-    --accent: #7c5cff; --accent-2: #00d2a8; --warn: #ffcd4d; --bad: #ff6b6b;
-    --chip-bg: rgba(255,255,255,0.08);
-    --input-bg: rgba(0,0,0,0.3);
-    --canvas-bg: rgba(0,0,0,0.25);
-  }
-  /* Light theme overrides */
-  .light {
-    --bg1: #f7f9fc; --bg2: #e7ecf5; --bg3: #dde6ff; --bg4: #ffffff;
-    --glass: rgba(255,255,255,0.7);
-    --border: rgba(0,0,0,0.08);
-    --text: #0f172a; --muted: #475569; --heading: #5a3fff;
-    --accent: #5a3fff; --accent-2: #089981; --warn: #eab308; --bad: #ef4444;
-    --chip-bg: rgba(0,0,0,0.06);
-    --input-bg: rgba(255,255,255,0.7);
-    --canvas-bg: rgba(0,0,0,0.06);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>آینه آینده X — نسخه MVP</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --bg2:#0f1520; --glass:rgba(255,255,255,0.06);
+      --text:#e9efff; --muted:#9fb0cc; --accent:#7ee787; --accent2:#7aa2f7; --warn:#ffb86b; --risk:#ff6b6b;
+      --chip:#1c2433; --chipText:#cfe3ff; --card:#0f1722; --border:rgba(255,255,255,0.12);
+      --good:#27c498; --neutral:#b5c2d9; --bad:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: IRANSans, Segoe UI, Roboto, sans-serif;
+      color:var(--text); background: radial-gradient(1200px 600px at 70% -10%, #162033, #0b0f14 60%) fixed;
+      overflow-x:hidden;
+    }
+    /* Starfield canvas background */
+    #bgCanvas{position:fixed; inset:0; z-index:-1; filter: saturate(110%) brightness(110%)}
 
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; font-family: 'Vazirmatn', sans-serif; color: var(--text);
-    background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
-    background-size: 400% 400%; animation: gradientBG 18s ease infinite;
-    overflow-x: hidden;
-  }
-  @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 24px; position:sticky; top:0; background:linear-gradient(180deg, rgba(11,15,20,0.9), rgba(11,15,20,0.6) 60%, transparent);
+      backdrop-filter: blur(6px); border-bottom:1px solid var(--border); z-index:2;
+    }
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{
+      width:34px;height:34px;border-radius:10px; background:
+        radial-gradient(80% 80% at 30% 30%, #7ee78744, transparent 70%),
+        linear-gradient(135deg, #24344a, #141c29);
+      border:1px solid var(--border); box-shadow:0 0 30px #7ee78722 inset, 0 0 12px #7ee78722;
+    }
+    h1{font-size:18px; margin:0; letter-spacing:0.3px}
+    .header-actions{display:flex; gap:8px}
+    .btn{
+      padding:10px 14px; border:1px solid var(--border); border-radius:10px; color:var(--text);
+      background: linear-gradient(180deg, #172033, #121a28); cursor:pointer;
+      transition: all .2s ease; font-size:14px;
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,0,0,0.25)}
+    .btn.primary{border-color:#2a7b5f; background:linear-gradient(180deg, #1a3b34, #112822); color:#aef7d3}
+    .btn.ghost{background:transparent}
+    .container{max-width:1180px; margin:16px auto 80px; padding:0 20px}
+    .grid{
+      display:grid; grid-template-columns: 340px 1fr; gap:16px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns: 1fr} }
 
-  /* 3D background canvases */
-  canvas#bg, canvas#grid {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;
-  }
-  canvas#grid { z-index: -1; }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid var(--border); border-radius:16px; padding:16px 16px 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .panel h2{font-size:16px; margin:0 0 10px 0; color:#cfe3ff}
+    .panel p{color:var(--muted); margin:8px 0 12px 0; line-height:1.7}
+    .field{margin:10px 0}
+    .field label{display:block; color:#cfe3ff; font-size:13px; margin-bottom:6px}
+    .input, select, textarea{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+      background:#0e1420; color:var(--text); outline:none; transition:border .2s ease;
+    }
+    .row{display:flex; gap:10px}
+    .row .col{flex:1}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      border:1px solid var(--border); background:var(--chip); color:var(--chipText);
+      font-size:12px; padding:6px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:6px
+    }
+    .chip .dot{width:7px; height:7px; border-radius:999px; background:var(--accent); box-shadow:0 0 10px var(--accent)}
+    .muted{color:var(--muted)}
+    .section{margin-top:16px}
+    .kpi{display:flex; gap:10px; flex-wrap:wrap}
+    .kpi .card{
+      flex:1 1 160px; background:linear-gradient(180deg, #0e1420, #0b1018);
+      border:1px solid var(--border); border-radius:14px; padding:12px
+    }
+    .kpi .title{font-size:12px; color:#b7c7e8; margin-bottom:6px}
+    .kpi .value{font-size:22px; font-weight:700}
+    .kpi .trend{font-size:12px}
+    .good{color:var(--good)} .bad{color:var(--bad)} .neutral{color:var(--neutral)}
 
-  header {
-    position: sticky; top: 0; z-index: 5;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 14px 20px; background: var(--glass); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-  }
-  .brand { display:flex; align-items:center; gap:10px; }
-  .logo {
-    width: 34px; height: 34px; border-radius: 10px;
-    background: radial-gradient(120% 120% at 30% 30%, #fff2 0%, #0000 60%), linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 4px 20px rgba(124,92,255,0.45);
-  }
-  h1 { font-size: 20px; margin: 0; color: var(--heading); }
-  .sub { margin: 0; color: var(--muted); font-size: 12px; }
+    /* Radar + uncertainty */
+    .viz{display:grid; grid-template-columns: 1.2fr 1fr; gap:12px}
+    @media (max-width: 980px){ .viz{grid-template-columns: 1fr} }
+    .canvasWrap{position:relative; background:linear-gradient(180deg, rgba(15,21,32,0.8), rgba(10,14,22,0.6)); border:1px solid var(--border); border-radius:14px; padding:8px}
+    #radar{width:100%; height:380px}
+    .legend{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
+    .legend .chip{background:#0e1726}
+    .why{
+      background: linear-gradient(180deg, #0e1522, #0c111b);
+      border:1px solid var(--border); border-radius:14px; padding:12px;
+      display:flex; flex-direction:column; gap:10px; max-height:420px; overflow:auto
+    }
+    .why h3{margin:0 0 2px 0; font-size:14px; color:#cfe3ff}
+    .why .reason{display:flex; align-items:flex-start; gap:10px; border-bottom:1px dashed var(--border); padding-bottom:8px}
+    .why .reason:last-child{border-bottom:none}
+    .bar{height:6px; background:#122036; border-radius:8px; overflow:hidden}
+    .bar > span{display:block; height:100%; background: linear-gradient(90deg, #7ee787, #7aa2f7)}
+    .why .srcs{display:flex; flex-wrap:wrap; gap:8px}
+    .why .srcs .chip{background:#101a2b}
 
-  .theme-toggle {
-    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-    background: var(--chip-bg); border: 1px solid var(--border);
-    padding: 8px 12px; border-radius: 999px; color: var(--text); user-select: none;
-  }
+    /* Timeline */
+    .timeline{background:linear-gradient(180deg, #0e1522, #0c111b); border:1px solid var(--border); border-radius:14px; padding:12px}
+    .timeline svg{width:100%; height:140px}
+    .tick text{fill:#a9bfde; font-size:12px}
 
-  .container {
-    max-width: 1200px; margin: 20px auto; padding: 0 16px;
-    display: grid; gap: 20px;
-    grid-template-columns: 1fr; 
-  }
-  @media (min-width: 980px) { .container { grid-template-columns: 380px 1fr; } }
+    /* Actions */
+    .actions{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px}
+    @media (max-width: 820px){ .actions{grid-template-columns:1fr} }
+    .actionCard{
+      background:linear-gradient(180deg, #0f1726, #0c131f);
+      border:1px solid var(--border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px
+    }
+    .pill{font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:#bcd2f0; display:inline-flex; gap:6px; align-items:center}
+    .impact{color:#aef7d3} .difficulty{color:#ffd28b}
+    .foot{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:6px}
 
-  .card {
-    background: var(--glass); border: 1px solid var(--border); border-radius: 16px;
-    padding: 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    animation: fadeInUp 0.8s ease; 
-  }
-  .card h3 { margin: 0 0 10px; color: var(--heading); font-size: 16px; }
+    /* Footer */
+    footer{margin:30px 0 60px; color:#89a1c5; font-size:12px; text-align:center}
+    .toggle{
+      display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#cfe3ff; cursor:pointer
+    }
+    .toggle input{accent-color:#7ee787; width:18px; height:18px}
+    .hint{font-size:12px; color:#9fb0cc}
 
-  label { font-size: 12px; color: var(--muted); margin-top: 10px; display: block; }
-  input, select, textarea {
-    width: 100%; padding: 10px; margin-top: 6px; border-radius: 10px; border: 1px solid var(--border);
-    background: var(--input-bg); color: var(--text); outline: none; transition: border 0.2s;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  .chip {
-    padding: 6px 12px; border-radius: 20px; background: var(--chip-bg);
-    border: 1px solid var(--border); font-size: 12px; cursor: pointer; transition: 0.25s;
-  }
-  .chip:hover { transform: translateY(-1px); }
-  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-  .btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-  .btn {
-    background: var(--accent); color: white; border: none; padding: 10px 14px; border-radius: 10px;
-    cursor: pointer; font-weight: 600; transition: 0.25s;
-  }
-  .btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
-  .btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
-
-  .kpi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
-  .k { background: var(--chip-bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; }
-  .k .v { font-weight: 700; font-size: 18px; }
-  .k .t { color: var(--muted); font-size: 11px; }
-
-  canvas#radar { width: 100%; height: 280px; background: var(--canvas-bg); border-radius: 12px; }
-
-  .mood-wrap { margin-top: 8px; }
-  .mood-label { display:flex; justify-content:space-between; font-size: 12px; color: var(--muted); }
-  .mood-bar {
-    height: 10px; border-radius: 999px; margin-top: 6px;
-    background: linear-gradient(90deg, #ff3b3b, #ffcd4d, #00d2a8);
-    position: relative; overflow: hidden; border: 1px solid var(--border);
-  }
-  .mood-pointer {
-    position: absolute; top: -4px; width: 2px; height: 18px; background: var(--text);
-    box-shadow: 0 0 8px rgba(255,255,255,0.7);
-  }
-
-  .item { background: var(--chip-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-top: 8px; }
-  .danger { color: var(--bad); } .ok { color: var(--accent-2); }
-
-  /* SVG Timeline */
-  .timeline-wrap { margin-top: 10px; }
-  svg.timeline { width: 100%; height: 140px; background: var(--canvas-bg); border-radius: 12px; }
-  .tl-label { font-size: 11px; fill: var(--text); opacity: 0.85; }
-  .tl-year { font-size: 10px; fill: var(--muted); }
-  .tl-dot { filter: drop-shadow(0 0 6px rgba(124,92,255,0.7)); }
-
-  /* Quote */
-  .quote { font-size: 13px; color: var(--muted); margin-top: 10px; border-right: 3px solid var(--accent); padding-right: 10px; }
-
-  @keyframes fadeInUp { from {opacity:0; transform: translateY(16px)} to {opacity:1; transform: translateY(0)} }
-</style>
+    /* Light theme */
+    body.light{
+      --bg:#f7fbff; --bg2:#eef5ff; --glass:rgba(0,0,0,0.05); --text:#0d1b2a; --muted:#3f5877;
+      --chip:#e7eefc; --chipText:#0d1b2a; --card:#f0f6ff; --border:rgba(0,0,0,0.12);
+      --accent:#0ea5a5; --accent2:#2563eb; --warn:#f59e0b; --risk:#ef4444;
+      --good:#059669; --neutral:#64748b; --bad:#ef4444;
+      background: radial-gradient(1200px 600px at 70% -10%, #e6f1ff, #f7fbff 60%) fixed;
+    }
+    body.light #bgCanvas{filter: none}
+  </style>
 </head>
 <body>
+  <canvas id="bgCanvas"></canvas>
 
-<canvas id="bg"></canvas>
-<canvas id="grid"></canvas>
-
-<header>
-  <div class="brand">
-    <div class="logo" aria-hidden="true"></div>
-    <div>
-      <h1>آینه آینده X</h1>
-      <p class="sub">تصمیم‌های امروزت + روندهای جهانی = آینده‌ای که می‌بینی و می‌سازی</p>
+  <header>
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>آینه آینده X — نسخه MVP</h1>
+        <div class="muted" style="font-size:12px">شبیه‌ساز سناریوهای شخصی با شواهد اندیشکده‌ها</div>
+      </div>
     </div>
+    <div class="header-actions">
+      <button id="saveBtn" class="btn">ذخیره سناریو</button>
+      <button id="exportBtn" class="btn">خروجی PDF</button>
+      <label class="toggle">
+        <input id="themeToggle" type="checkbox"/> حالت روشن
+      </label>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="grid">
+      <!-- Left: Inputs and source chips -->
+      <div class="panel">
+        <h2>پروفایل و تصمیم</h2>
+        <div class="field">
+          <label>هدف تصمیم</label>
+          <select id="decision">
+            <option value="career">تغییر مسیر شغلی</option>
+            <option value="startup">راه‌اندازی استارتاپ</option>
+            <option value="invest">سرمایه‌گذاری شخصی</option>
+            <option value="relocate">جابجایی/مهاجرت</option>
+            <option value="learn">یادگیری مهارت جدید</option>
+          </select>
+        </div>
+        <div class="row">
+          <div class="col field">
+            <label>تحمل ریسک</label>
+            <select id="risk">
+              <option value="low">پایین</option>
+              <option value="mid" selected>متوسط</option>
+              <option value="high">بالا</option>
+            </select>
+          </div>
+          <div class="col field">
+            <label>افق زمانی</label>
+            <select id="horizon">
+              <option value="6">۶ ماه</option>
+              <option value="12" selected>۱۲ ماه</option>
+              <option value="24">۲۴ ماه</option>
+              <option value="36">۳۶ ماه</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>زمینه/مهارت‌های کلیدی</label>
+          <input id="skills" class="input" placeholder="مثال: Data, AI, انرژی پاک، طراحی محصول"/>
+        </div>
+        <div class="field">
+          <label>ترندهای مدنظر</label>
+          <div class="chips" id="trendChips">
+            <!-- generated -->
+          </div>
+          <div class="hint">ترندها را روشن/خاموش کن تا اثرشان بر سناریو و عدم‌قطعیت را ببینی.</div>
+        </div>
+        <div class="section">
+          <h2>منابع و اندیشکده‌ها</h2>
+          <p class="muted">این نسخه از مجموعه‌ای از اندیشکده‌ها/مراکز پژوهشی الهام می‌گیرد. در نسخه کامل، وزن‌ها به‌صورت پویا بر اساس موضوع تنظیم می‌شوند.</p>
+          <div class="chips" id="sourceChips">
+            <!-- 30+ sources -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Visualization and outputs -->
+      <div class="panel">
+        <h2>جمع‌بندی سناریو</h2>
+        <div class="kpi">
+          <div class="card">
+            <div class="title">شاخص فرصت</div>
+            <div id="oppVal" class="value">—</div>
+            <div id="oppTrend" class="trend good">—</div>
+          </div>
+          <div class="card">
+            <div class="title">ریسک سیستمی</div>
+            <div id="riskVal" class="value">—</div>
+            <div id="riskNote" class="trend bad">—</div>
+          </div>
+          <div class="card">
+            <div class="title">عدم‌قطعیت</div>
+            <div id="uncVal" class="value">—</div>
+            <div class="trend neutral">هرچه بالاتر، بازه پیش‌بینی پهن‌تر</div>
+          </div>
+        </div>
+
+        <div class="section viz">
+          <div class="canvasWrap">
+            <canvas id="radar"></canvas>
+            <div class="legend">
+              <span class="chip"><span class="dot"></span> امتیاز</span>
+              <span class="chip" style="--accent:#ffd28b"><span class="dot" style="background:#ffd28b; box-shadow:0 0 10px #ffd28b"></span> باند عدم‌قطعیت</span>
+            </div>
+          </div>
+          <div class="why">
+            <h3>چرا این نتیجه؟</h3>
+            <div id="whyList">
+              <!-- reasons -->
+            </div>
+            <div>
+              <div class="muted" style="margin:4px 0 6px">منابع مؤثر:</div>
+              <div class="srcs" id="whySources"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section timeline">
+          <h2>نقشه زمان 2025–2032</h2>
+          <svg id="timelineSvg" viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="section">
+          <h2>گام‌های پیشنهادی</h2>
+          <div class="actions" id="actions">
+            <!-- 30/90/180 -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      نسخه MVP نمایشی. وزن‌دهی منابع، اتصال به داده‌های زنده و توصیه‌های تخصصی قابل افزودن در گام بعدی.
+    </footer>
   </div>
-  <div class="theme-toggle" id="themeToggle" role="button" aria-label="تغییر حالت رنگ">
-    <span id="themeIcon">🌙</span><span id="themeText">حالت تاریک</span>
-  </div>
-</header>
 
-<div class="container">
-  <!-- Sidebar -->
-  <div class="card" id="sidebar">
-    <h3>پروفایل و تصمیم</h3>
-
-    <label>سن</label>
-    <input id="age" type="number" min="12" max="90" placeholder="مثلاً 24">
-
-    <label>شهر/کشور</label>
-    <input id="location" type="text" placeholder="مثلاً تبریز، ایران">
-
-    <label>مهارت‌ها</label>
-    <input id="skills" type="text" placeholder="مثلاً JavaScript, طراحی محصول, زبان انگلیسی">
-
-    <label>تحمل ریسک</label>
-    <select id="risk">
-      <option value="low">پایین</option>
-      <option value="medium" selected>متوسط</option>
-      <option value="high">بالا</option>
-    </select>
-
-    <label>هدف اصلی تا 2030</label>
-    <select id="goal">
-      <option value="career">جهش شغلی</option>
-      <option value="wealth">ثروت و سرمایه</option>
-      <option value="wellbeing">سلامت و رفاه</option>
-      <option value="sustainability">پایداری و اثر اجتماعی</option>
-      <option value="resilience">تاب‌آوری و استقلال</option>
-    </select>
-
-    <label style="margin-top:12px;">نوع تصمیم</label>
-    <div class="chips" id="decisions">
-      <div class="chip active" data-id="startup">استارتاپ</div>
-      <div class="chip" data-id="study">تحصیل</div>
-      <div class="chip" data-id="immigrate">مهاجرت</div>
-      <div class="chip" data-id="invest">سرمایه‌گذاری</div>
-      <div class="chip" data-id="switch">تغییر شغل</div>
-    </div>
-
-    <label style="margin-top:12px;">روندهای جهانی</label>
-    <div class="chips" id="trends">
-      <div class="chip active" data-id="AI">هوش مصنوعی</div>
-      <div class="chip active" data-id="Climate">اقلیم و پایداری</div>
-      <div class="chip" data-id="Geo">ژئوپلیتیک</div>
-      <div class="chip" data-id="Urban">شهرهای هوشمند</div>
-      <div class="chip" data-id="Demography">جمعیت و سالمندی</div>
-      <div class="chip" data-id="Culture">سبک زندگی دیجیتال</div>
-    </div>
-
-    <div class="btns">
-      <button class="btn" id="simulate">شبیه‌سازی</button>
-      <button class="btn secondary" id="save">ذخیره سناریو</button>
-      <button class="btn secondary" id="load">بارگذاری</button>
-    </div>
-
-    <div class="quote" id="quote"></div>
-  </div>
-
-  <!-- Main -->
-  <div class="card">
-    <h3>نتایج سناریو</h3>
-
-    <div class="kpi">
-      <div class="k"><div class="v" id="k-career">–</div><div class="t">شغل/مهارت</div></div>
-      <div class="k"><div class="v" id="k-wealth">–</div><div class="t">ثروت/سرمایه</div></div>
-      <div class="k"><div class="v" id="k-wellbeing">–</div><div class="t">رفاه/سلامت</div></div>
-      <div class="k"><div class="v" id="k-sustainability">–</div><div class="t">پایداری</div></div>
-      <div class="k"><div class="v" id="k-resilience">–</div><div class="t">تاب‌آوری</div></div>
-    </div>
-
-    <canvas id="radar" width="700" height="320"></canvas>
-
-    <div class="mood-wrap">
-      <div class="mood-label"><span>ریسک بالا</span><span>آینده امیدوارکننده</span></div>
-      <div class="mood-bar" id="mood"><div class="mood-pointer" id="moodPtr" style="left:50%"></div></div>
-    </div>
-
-    <div class="item" id="narrative" style="margin-top:12px;">برای شروع، سناریو را شبیه‌سازی کن.</div>
-
-    <h3 style="margin-top:16px;">ریسک‌ها و فرصت‌ها</h3>
-    <div id="risksOps"></div>
-
-    <h3 style="margin-top:16px;">تایم‌لاین احتمالی 2025–2032</h3>
-    <div class="timeline-wrap">
-      <svg class="timeline" id="timeline" viewBox="0 0 800 140" preserveAspectRatio="none">
-        <!-- Path and nodes will be generated by JS -->
-      </svg>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-  // Theme handling
-  const root = document.documentElement;
-  const savedTheme = localStorage.getItem('fx_theme') || 'dark';
-  if (savedTheme === 'light') document.body.classList.add('light');
-  document.getElementById('themeIcon').textContent = document.body.classList.contains('light') ? '🌞' : '🌙';
-  document.getElementById('themeText').textContent = document.body.classList.contains('light') ? 'حالت روشن' : 'حالت تاریک';
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    document.body.classList.toggle('light');
-    const isLight = document.body.classList.contains('light');
-    localStorage.setItem('fx_theme', isLight ? 'light' : 'dark');
-    document.getElementById('themeIcon').textContent = isLight ? '🌞' : '🌙';
-    document.getElementById('themeText').textContent = isLight ? 'حالت روشن' : 'حالت تاریک';
-  });
-
-  // Motivational quotes (future-centric)
-  const QUOTES = [
-    "آینده چیزی نیست که واردش می‌شویم؛ چیزی است که می‌سازیم.",
-    "ترندها جهت بادند؛ بادبانت را تنظیم کن، نه اینکه منتظر آرامش دریا باشی.",
-    "توانایی یادگیری سریع، سوخت اصلی مزیت رقابتی توست.",
-    "هر تصمیم کوچک امروز، اهرمی برای فردای بزرگ‌تر است.",
-    "شجاعت، میان‌برِ عبور از عدم قطعیت است."
-  ];
-  function setQuote() {
-    const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-    document.getElementById('quote').textContent = "«" + q + "»";
-  }
-  setQuote();
-
-  // Three.js starfield background
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 6;
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), alpha: true, antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  const starGeo = new THREE.SphereGeometry(0.04, 12, 12);
-  const starMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-  const stars = [];
-  for (let i = 0; i < 400; i++) {
-    const s = new THREE.Mesh(starGeo, starMat);
-    s.position.set(
-      THREE.MathUtils.randFloatSpread(100),
-      THREE.MathUtils.randFloatSpread(100),
-      THREE.MathUtils.randFloatSpread(100)
-    );
-    scene.add(s); stars.push(s);
-  }
-  // Subtle movement
-  function animateBg() {
-    requestAnimationFrame(animateBg);
-    stars.forEach(st => { st.rotation.x += 0.001; st.rotation.y += 0.001; });
-    renderer.render(scene, camera);
-  }
-  animateBg();
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  // Neon grid canvas background
-  const grid = document.getElementById('grid');
-  const gctx = grid.getContext('2d');
-  function resizeGrid() { grid.width = window.innerWidth; grid.height = window.innerHeight; }
-  resizeGrid(); window.addEventListener('resize', resizeGrid);
-  function drawGrid(t = 0) {
-    gctx.clearRect(0,0,grid.width, grid.height);
-    const spacing = 50, speed = 0.02;
-    gctx.strokeStyle = 'rgba(124,92,255,0.18)';
-    gctx.lineWidth = 1;
-    const offset = (t * speed) % spacing;
-    // verticals
-    for (let x = -spacing; x < grid.width + spacing; x += spacing) {
-      gctx.beginPath(); gctx.moveTo(x + offset, 0); gctx.lineTo(x + offset, grid.height); gctx.stroke();
-    }
-    // horizontals
-    for (let y = -spacing; y < grid.height + spacing; y += spacing) {
-      gctx.beginPath(); gctx.moveTo(0, y + offset); gctx.lineTo(grid.width, y + offset); gctx.stroke();
-    }
-    requestAnimationFrame(drawGrid);
-  }
-  requestAnimationFrame(drawGrid);
-
-  // Data model
-  const MEGATRENDS = {
-    AI: { impact: { career: 0.9, wealth: 0.7, wellbeing: 0.3, sustainability: 0.4, resilience: 0.5 },
-          risks: ["جابجایی شغلی", "شکاف مهارتی"], ops: ["افزایش بهره‌وری", "خلق نقش‌های نو"] },
-    Climate: { impact: { career: 0.5, wealth: 0.6, wellbeing: 0.6, sustainability: 0.95, resilience: 0.7 },
-          risks: ["هزینه انطباق", "اختلال زنجیره"], ops: ["بازارهای سبز", "نوآوری انرژی"] },
-    Geo: { impact: { career: 0.4, wealth: 0.5, wellbeing: 0.3, sustainability: 0.3, resilience: 0.9 },
-          risks: ["نوسان ژئوپلیتیک"], ops: ["تنوع‌بخشی و بومی‌سازی"] },
-    Urban: { impact: { career: 0.6, wealth: 0.5, wellbeing: 0.7, sustainability: 0.6, resilience: 0.5 },
-          risks: ["وابستگی زیرساختی"], ops: ["خدمات شهری هوشمند"] },
-    Demography: { impact: { career: 0.5, wealth: 0.4, wellbeing: 0.8, sustainability: 0.3, resilience: 0.6 },
-          risks: ["فشار رفاهی"], ops: ["بازار سلامت و مراقبت"] },
-    Culture: { impact: { career: 0.7, wealth: 0.6, wellbeing: 0.7, sustainability: 0.4, resilience: 0.6 },
-          risks: ["فرسودگی دیجیتال"], ops: ["اقتصاد خالقان، ریموت"] }
-  };
-  const DECISIONS = {
-    study:   { career: 0.85, wealth: 0.45, wellbeing: 0.5,  sustainability: 0.4,  resilience: 0.6, verb: "تحصیل/مهارت‌آموزی" },
-    immigrate:{career: 0.7,  wealth: 0.6,  wellbeing: 0.55, sustainability: 0.45, resilience: 0.7, verb: "مهاجرت هدفمند" },
-    startup: { career: 0.8,  wealth: 0.8,  wellbeing: 0.45, sustainability: 0.55, resilience: 0.7, verb: "راه‌اندازی استارتاپ" },
-    invest:  { career: 0.5,  wealth: 0.9,  wellbeing: 0.55, sustainability: 0.4,  resilience: 0.65, verb: "سرمایه‌گذاری هوشمند" },
-    switch:  { career: 0.75, wealth: 0.55, wellbeing: 0.6,  sustainability: 0.45, resilience: 0.7, verb: "تغییر شغل/حوزه" }
-  };
-  const clamp01 = x => Math.max(0, Math.min(1, x));
-  const pct = x => Math.round(clamp01(x) * 100);
-
-  // Chips
-  function wireChips(id, single=false) {
-    const el = document.getElementById(id);
-    el.addEventListener('click', (e) => {
-      const chip = e.target.closest('.chip'); if (!chip) return;
-      if (single) { [...el.children].forEach(c=>c.classList.remove('active')); chip.classList.add('active'); }
-      else chip.classList.toggle('active');
-    });
-  }
-  wireChips('decisions', true); wireChips('trends');
-
-  // Radar chart
-  function drawRadar(canvas, values) {
-    const ctx = canvas.getContext('2d'); const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0,0,W,H);
-    const cx = W/2, cy = H/2 + 10; const axes = [
-      { key:'career', label:'شغل' }, { key:'wealth', label:'ثروت' }, { key:'wellbeing', label:'رفاه' },
-      { key:'sustainability', label:'پایداری' }, { key:'resilience', label:'تاب‌آوری' }
+  <script>
+    // ---------------------------
+    // Data: Trends and Sources
+    // ---------------------------
+    const TRENDS = [
+      { id:'ai', name:'هوش مصنوعی مولد', risk:0.2, opp:0.35, unc:0.15 },
+      { id:'green', name:'گذار سبز و کربن‌صفر', risk:0.18, opp:0.28, unc:0.14 },
+      { id:'geo', name:'ریسک ژئوپلیتیک', risk:0.35, opp:-0.05, unc:0.22 },
+      { id:'supply', name:'بازآرایی زنجیره تأمین', risk:0.22, opp:0.18, unc:0.12 },
+      { id:'aging', name:'سالمندی جمعیت', risk:0.25, opp:0.05, unc:0.1 },
+      { id:'bio', name:'همگرایی بیو/دیجیتال', risk:0.15, opp:0.22, unc:0.12 },
+      { id:'cyber', name:'امنیت سایبری', risk:0.2, opp:0.12, unc:0.12 },
+      { id:'energy', name:'انرژی‌های نو', risk:0.17, opp:0.25, unc:0.12 },
+      { id:'urban', name:'شهرهای هوشمند', risk:0.12, opp:0.14, unc:0.08 },
+      { id:'fin', name:'فین‌تک/دارایی‌های دیجیتال', risk:0.22, opp:0.16, unc:0.15 },
     ];
-    const R = Math.min(W,H)/2 - 40;
-    // grid rings
-    ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--border'); ctx.lineWidth = 1;
-    for (let r=0.2; r<=1.0; r+=0.2) {
-      ctx.beginPath();
-      axes.forEach((a,i)=> {
-        const ang = (Math.PI*2/axes.length)*i - Math.PI/2;
-        const x = cx + Math.cos(ang)*R*r, y = cy + Math.sin(ang)*R*r;
-        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }); ctx.closePath(); ctx.stroke();
-    }
-    // axes + labels
-    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text'); ctx.globalAlpha = 0.85;
-    ctx.font = '12px Vazirmatn, sans-serif';
-    axes.forEach((a,i)=>{
-      const ang = (Math.PI*2/axes.length)*i - Math.PI/2;
-      const x = cx + Math.cos(ang)*(R+12), y = cy + Math.sin(ang)*(R+12);
-      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx + Math.cos(ang)*R, cy + Math.sin(ang)*R); ctx.stroke();
-      ctx.textAlign = Math.cos(ang)>0.1 ? 'left' : (Math.cos(ang)<-0.1 ? 'right' : 'center');
-      ctx.fillText(a.label, x, y);
-    });
-    ctx.globalAlpha = 1;
-    // polygon
-    ctx.beginPath();
-    axes.forEach((a,i)=>{
-      const v = clamp01(values[a.key]); const ang = (Math.PI*2/axes.length)*i - Math.PI/2;
-      const x = cx + Math.cos(ang)*R*v, y = cy + Math.sin(ang)*R*v;
-      if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-    });
-    ctx.closePath();
-    // gradient fill
-    const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, R);
-    grad.addColorStop(0, 'rgba(124,92,255,0.35)'); grad.addColorStop(1, 'rgba(0,210,168,0.15)');
-    ctx.fillStyle = grad; ctx.fill();
-    ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--heading'); ctx.lineWidth = 2; ctx.stroke();
-  }
 
-  function getActiveKey(containerId) {
-    const el = document.getElementById(containerId); const chip = el.querySelector('.chip.active');
-    return chip ? chip.dataset.id : null;
-  }
-  function getActiveKeys(containerId) {
-    return [...document.getElementById(containerId).querySelectorAll('.chip.active')].map(c=>c.dataset.id);
-  }
-
-  function score(profile, decisionKey, trendKeys) {
-    const base = DECISIONS[decisionKey];
-    const trendImpact = trendKeys.reduce((acc,k)=>{
-      const imp = MEGATRENDS[k].impact; Object.keys(acc).forEach(d=> acc[d]+=imp[d]); return acc;
-    }, { career:0, wealth:0, wellbeing:0, sustainability:0, resilience:0 });
-    const n = Math.max(1, trendKeys.length);
-    Object.keys(trendImpact).forEach(d=> trendImpact[d]/=n);
-    const rMod = profile.risk==='high' ? 0.08 : profile.risk==='low' ? -0.05 : 0;
-    const gBoost = { career:0, wealth:0, wellbeing:0, sustainability:0, resilience:0 }; gBoost[profile.goal]=0.1;
-    const skills = (profile.skills || "").toLowerCase();
-    const synergy = {
-      AI: /ai|هوش|data|دیتا/.test(skills) ? 0.08 : 0,
-      Climate: /محیط|energy|esg|انرژی/.test(skills) ? 0.07 : 0,
-      Geo: /supply|logistics|زنجیره/.test(skills) ? 0.05 : 0,
-      Urban: /iot|gis|mobility|حمل/.test(skills) ? 0.05 : 0,
-      Demography: /health|care|سلامت/.test(skills) ? 0.06 : 0,
-      Culture: /content|design|creator|طراحی/.test(skills) ? 0.06 : 0
-    };
-    const synergySum = trendKeys.reduce((s,k)=> s + (synergy[k]||0), 0);
-    const dims = ['career','wealth','wellbeing','sustainability','resilience'];
-    const scores = {}; dims.forEach(dim=>{
-      const v = base[dim]*0.55 + trendImpact[dim]*0.35 + gBoost[dim] + rMod + synergySum*0.2;
-      scores[dim] = clamp01(v);
-    });
-    return scores;
-  }
-
-  function buildNarrative(profile, decisionKey, scores, trendKeys) {
-    const verb = DECISIONS[decisionKey].verb;
-    const top = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
-    const topTxt = { career:"مسیر شغلی‌ات جهش می‌گیرد.", wealth:"رشد سرمایه‌ات معنادار خواهد شد.", wellbeing:"کیفیت زندگی‌ات بهتر می‌شود.",
-      sustainability:"اثر اجتماعی/محیطی‌ات پررنگ می‌شود.", resilience:"تاب‌آوری‌ات تقویت می‌شود." }[top];
-    const trendLine = trendKeys.map(k => ({AI:"موج هوش مصنوعی",Climate:"گذار سبز",Geo:"بازپیکربندی ژئوپلیتیک",Urban:"شهرهای هوشمند",Demography:"تحول جمعیت",Culture:"سبک دیجیتال"}[k])).join("، ");
-    const riskText = profile.risk==='high' ? "ریسک‌پذیری تو می‌تواند بازدهی بزرگ‌تری بسازد."
-      : profile.risk==='low' ? "احتیاط تو ثبات بیشتری به مسیر می‌دهد." : "تعادل ریسک را حفظ کرده‌ای.";
-    const goalHint =
-      profile.goal==='career' ? "روی مهارت‌های کمیاب و پروژه‌های واقعی تمرکز کن." :
-      profile.goal==='wealth' ? "تنوع سرمایه‌گذاری و صندوق اضطراری را فراموش نکن." :
-      profile.goal==='wellbeing' ? "ریتم کار/زندگی را متوازن نگه دار." :
-      profile.goal==='sustainability' ? "استانداردهای ESG را در محصول/شغل دخیل کن." :
-      "شبکه‌سازی و چندمنبعی‌کردن درآمد، سپر توست.";
-    return `با انتخاب «${verb}» و تمرکز بر ${trendLine}، ${topTxt} ${riskText} اگر ${goalHint} مسیرت تا 2030 امن‌تر و پربازده‌تر خواهد شد.`;
-  }
-
-  function buildRiskOps(decisionKey, trendKeys) {
-    const items = [];
-    trendKeys.forEach(k => {
-      MEGATRENDS[k].risks.forEach(r => items.push({ type:'risk', text:`(${k}) ${r}` }));
-      MEGATRENDS[k].ops.forEach(o => items.push({ type:'op', text:`(${k}) ${o}` }));
-    });
-    if (decisionKey==='startup') { items.push({type:'risk', text:'نقدینگی 18–24 ماه اول'}); items.push({type:'op', text:'بازارهای دیجیتال جهانی'}); }
-    if (decisionKey==='immigrate') { items.push({type:'risk', text:'سازگاری فرهنگی/قانونی'}); items.push({type:'op', text:'اکوسیستم‌های نوآوری'}); }
-    return items;
-  }
-
-  function buildTimeline(decisionKey) {
-    const base = [
-      { y:'2025', t:'شروع و بازتنظیم' },
-      { y:'2026', t:'شبکه‌سازی هدفمند' },
-      { y:'2027', t:'MVP/KPI و اصلاح' },
-      { y:'2028', t:'گسترش مقیاس' },
-      { y:'2029', t:'تنوع‌بخشی' },
-      { y:'2030–2032', t:'تثبیت مزیت' }
+    const SOURCES = [
+      'European Commission JRC Strategic Foresight',
+      'OECD Strategic Foresight',
+      'World Economic Forum',
+      'Brookings Institution',
+      'RAND Corporation',
+      'Chatham House (RIIA)',
+      'CSIS',
+      'Carnegie Endowment for International Peace',
+      'Atlantic Council',
+      'Council on Foreign Relations (CFR)',
+      'Peterson Institute for International Economics (PIIE)',
+      'Bruegel',
+      'CEPS (Centre for European Policy Studies)',
+      'SWP (German Institute for International and Security Affairs)',
+      'Bertelsmann Stiftung',
+      'Kiel Institute (IfW Kiel)',
+      'DIW Berlin',
+      'Clingendael Institute',
+      'IFRI (Institut français des relations internationales)',
+      'IISS (International Institute for Strategic Studies)',
+      'SIPRI',
+      'GMF (German Marshall Fund)',
+      'MERICS',
+      'Lowy Institute',
+      'ASPI (Australian Strategic Policy Institute)',
+      'NBR (The National Bureau of Asian Research)',
+      'Hoover Institution',
+      'AEI (American Enterprise Institute)',
+      'Cato Institute',
+      'Heritage Foundation',
+      'Urban Institute',
+      'Nesta',
+      'Demos',
+      'Institute for the Future (IFTF)',
+      'Oxford Martin School',
+      'Fraunhofer ISI',
+      'Copenhagen Institute for Futures Studies (CIFS)',
+      'McKinsey Global Institute (MGI)',
+      'EPRS (European Parliamentary Research Service)',
+      'Carnegie Europe'
     ];
-    if (decisionKey==='startup') base[2].t = 'MVP و اولین مشتریان';
-    if (decisionKey==='invest') base[1].t = 'تدوین سیاست سرمایه‌گذاری';
-    if (decisionKey==='immigrate') base[0].t = 'آمادگی زبان و مدارک';
-    if (decisionKey==='study') base[1].t = 'مدارک/دوره‌های کلیدی';
-    if (decisionKey==='switch') base[0].t = 'بازآموزی و نمونه‌کار';
-    return base;
-  }
 
-  function renderTimeline(svg, data) {
-    while (svg.firstChild) svg.removeChild(svg.firstChild);
-    const W = svg.viewBox.baseVal.width || 800, H = svg.viewBox.baseVal.height || 140;
-    const pad = 40, yMid = H/2;
-    // path
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', `M ${pad} ${yMid} L ${W-pad} ${yMid}`);
-    path.setAttribute('stroke', getComputedStyle(document.body).getPropertyValue('--border')); path.setAttribute('fill','none'); path.setAttribute('stroke-width','2');
-    svg.appendChild(path);
-    const step = (W - pad*2) / (data.length - 1);
-    data.forEach((n,i)=>{
-      const x = pad + i*step; const y = yMid + (i%2===0? -18 : 18);
-      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-      // line to node
-      const l = document.createElementNS('http://www.w3.org/2000/svg','line');
-      l.setAttribute('x1', x); l.setAttribute('y1', yMid); l.setAttribute('x2', x); l.setAttribute('y2', y); l.setAttribute('stroke', getComputedStyle(document.body).getPropertyValue('--border'));
-      svg.appendChild(l);
-      // node
-      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '6'); c.setAttribute('fill', getComputedStyle(document.body).getPropertyValue('--heading')); c.setAttribute('class','tl-dot');
-      g.appendChild(c);
-      // labels
-      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x', x); txt.setAttribute('y', y + (i%2===0? -10 : 24)); txt.setAttribute('text-anchor','middle'); txt.setAttribute('class','tl-label'); txt.textContent = n.t;
-      g.appendChild(txt);
-      const yr = document.createElementNS('http://www.w3.org/2000/svg','text');
-      yr.setAttribute('x', x); yr.setAttribute('y', yMid + (i%2===0? -24 : 34)); yr.setAttribute('text-anchor','middle'); yr.setAttribute('class','tl-year'); yr.textContent = n.y;
-      svg.appendChild(yr);
-      svg.appendChild(g);
+    // ---------------------------
+    // UI Setup
+    // ---------------------------
+    const trendChips = document.getElementById('trendChips');
+    const sourceChips = document.getElementById('sourceChips');
+
+    const selectedTrends = new Set(['ai','green','geo','supply']); // defaults
+
+    function renderTrendChips(){
+      trendChips.innerHTML = '';
+      TRENDS.forEach(t=>{
+        const on = selectedTrends.has(t.id);
+        const el = document.createElement('span');
+        el.className = 'chip';
+        el.style.borderColor = on ? '#2a7b5f' : 'var(--border)';
+        el.style.boxShadow = on ? '0 0 18px rgba(126,231,135,0.15) inset' : 'none';
+        el.style.cursor = 'pointer';
+        el.innerHTML = `<span class="dot" style="background:${on?'#7ee787':'#6b7280'}; box-shadow:0 0 10px ${on?'#7ee787':'#6b728033'}"></span>${t.name}`;
+        el.onclick = ()=>{ if(on) selectedTrends.delete(t.id); else selectedTrends.add(t.id); renderTrendChips(); recompute(); };
+        trendChips.appendChild(el);
+      });
+    }
+
+    function renderSourceChips(){
+      sourceChips.innerHTML = '';
+      SOURCES.forEach((s,i)=>{
+        const el = document.createElement('span');
+        el.className = 'chip';
+        el.title = s;
+        el.innerHTML = `<span class="dot" style="background:${i%2? '#7aa2f7':'#7ee787'}"></span>${s}`;
+        sourceChips.appendChild(el);
+      });
+    }
+
+    renderTrendChips();
+    renderSourceChips();
+
+    // ---------------------------
+    // Radar Chart
+    // ---------------------------
+    const radar = document.getElementById('radar');
+    const rctx = radar.getContext('2d');
+    let dpi = window.devicePixelRatio || 1;
+    function resizeRadar(){
+      const rect = radar.getBoundingClientRect();
+      radar.width = rect.width * dpi;
+      radar.height = rect.height * dpi;
+      rctx.setTransform(dpi,0,0,dpi,0,0);
+      drawRadar();
+    }
+    window.addEventListener('resize', resizeRadar);
+
+    const DIMENSIONS = [
+      { id:'career', label:'شغل و مهارت' },
+      { id:'wealth', label:'سرمایه و ثروت' },
+      { id:'well', label:'رفاه و سلامت' },
+      { id:'impact', label:'پایداری و اثر' },
+      { id:'res', label:'تاب‌آوری' },
+    ];
+
+    let scores = { career:0.6, wealth:0.55, well:0.58, impact:0.62, res:0.57 };
+    let bands =  { career:0.12, wealth:0.1, well:0.11, impact:0.09, res:0.1 };
+
+    function drawRadar(){
+      const w = radar.width/dpi, h = radar.height/dpi;
+      rctx.clearRect(0,0,w,h);
+      const cx = w/2, cy = h/2 + 8;
+      const radius = Math.min(w,h)*0.36;
+
+      // grid
+      rctx.save();
+      rctx.strokeStyle = 'rgba(180,200,240,0.25)';
+      rctx.lineWidth = 1;
+      for(let g=1; g<=4; g++){
+        rctx.beginPath();
+        const r = radius * (g/4);
+        for(let i=0;i<DIMENSIONS.length;i++){
+          const a = (Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+          const x = cx + r*Math.cos(a), y = cy + r*Math.sin(a);
+          i===0 ? rctx.moveTo(x,y) : rctx.lineTo(x,y);
+        }
+        rctx.closePath(); rctx.stroke();
+      }
+      // axes and labels
+      DIMENSIONS.forEach((d,i)=>{
+        const a = (Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+        const x = cx + radius*Math.cos(a), y = cy + radius*Math.sin(a);
+        rctx.beginPath(); rctx.moveTo(cx,cy); rctx.lineTo(x,y); rctx.strokeStyle='rgba(180,200,240,0.15)'; rctx.stroke();
+        // label
+        const lx = cx + (radius+18)*Math.cos(a), ly = cy + (radius+18)*Math.sin(a);
+        rctx.fillStyle = '#cfe3ff'; rctx.font = '12px sans-serif'; rctx.textAlign = Math.cos(a)>0.2? 'left' : (Math.cos(a)<-0.2? 'right':'center');
+        rctx.fillText(d.label, lx, ly);
+      });
+
+      // uncertainty band
+      rctx.beginPath();
+      DIMENSIONS.forEach((d,i)=>{
+        const a = (Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+        const r = radius * Math.min(1, Math.max(0, scores[d.id] + bands[d.id]));
+        const x = cx + r*Math.cos(a), y = cy + r*Math.sin(a);
+        i===0 ? rctx.moveTo(x,y) : rctx.lineTo(x,y);
+      });
+      rctx.closePath();
+      rctx.fillStyle = 'rgba(255,210,139,0.18)';
+      rctx.fill();
+
+      // score polygon
+      rctx.beginPath();
+      DIMENSIONS.forEach((d,i)=>{
+        const a = (Math.PI*2)*i/DIMENSIONS.length - Math.PI/2;
+        const r = radius * Math.min(1, Math.max(0, scores[d.id]));
+        const x = cx + r*Math.cos(a), y = cy + r*Math.sin(a);
+        i===0 ? rctx.moveTo(x,y) : rctx.lineTo(x,y);
+      });
+      rctx.closePath();
+      const grad = rctx.createLinearGradient(0,0,w,h);
+      grad.addColorStop(0,'rgba(126,231,135,0.28)');
+      grad.addColorStop(1,'rgba(122,162,247,0.28)');
+      rctx.fillStyle = grad; rctx.fill();
+      rctx.strokeStyle = 'rgba(126,231,135,0.7)';
+      rctx.lineWidth = 2; rctx.stroke();
+
+      rctx.restore();
+    }
+    resizeRadar();
+
+    // ---------------------------
+    // Starfield background (Canvas 2D)
+    // ---------------------------
+    const bg = document.getElementById('bgCanvas');
+    const bctx = bg.getContext('2d');
+    let stars = [];
+    function resizeBg(){
+      bg.width = innerWidth * dpi;
+      bg.height = innerHeight * dpi;
+      bctx.setTransform(dpi,0,0,dpi,0,0);
+      stars = Array.from({length: 180}, ()=>({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        z: Math.random()*1.2 + 0.2,
+        s: Math.random()*1.5 + 0.3
+      }));
+    }
+    function tickBg(time){
+      bctx.clearRect(0,0,innerWidth,innerHeight);
+      stars.forEach(st=>{
+        st.y += st.z*0.15; if(st.y>innerHeight) { st.y=-5; st.x=Math.random()*innerWidth; }
+        bctx.fillStyle = `rgba(${180 + st.z*50}, ${210}, 255, ${0.35+st.z*0.4})`;
+        bctx.beginPath(); bctx.arc(st.x, st.y, st.s, 0, Math.PI*2); bctx.fill();
+      });
+      requestAnimationFrame(tickBg);
+    }
+    resizeBg(); requestAnimationFrame(tickBg);
+    addEventListener('resize', resizeBg);
+
+    // ---------------------------
+    // Timeline SVG
+    // ---------------------------
+    function renderTimeline(){
+      const svg = document.getElementById('timelineSvg');
+      const years = [2025,2026,2027,2028,2029,2030,2031,2032];
+      const w = 900, h = 140, pad = 60;
+      svg.innerHTML='';
+      // axis
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1', pad); line.setAttribute('y1', h/2);
+      line.setAttribute('x2', w-pad); line.setAttribute('y2', h/2);
+      line.setAttribute('stroke', '#2b3a55'); line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+
+      years.forEach((y,i)=>{
+        const x = pad + i*((w-2*pad)/(years.length-1));
+        const tick = document.createElementNS('http://www.w3.org/2000/svg','line');
+        tick.setAttribute('x1', x); tick.setAttribute('y1', h/2 - 8);
+        tick.setAttribute('x2', x); tick.setAttribute('y2', h/2 + 8);
+        tick.setAttribute('stroke','#3b5177'); tick.setAttribute('stroke-width','2');
+        svg.appendChild(tick);
+
+        const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+        txt.setAttribute('x', x); txt.setAttribute('y', h/2 + 28);
+        txt.setAttribute('text-anchor','middle'); txt.setAttribute('class','tick');
+        txt.textContent = y;
+        svg.appendChild(txt);
+      });
+
+      // scenario markers
+      const markers = [
+        { y:2025, label:'MVP مهارت/پروتوتایپ', tone:'#7ee787' },
+        { y:2026, label:'اعتبارسنجی بازار/شبکه', tone:'#7aa2f7' },
+        { y:2027, label:'گسترش/تنوع‌بخشی', tone:'#ffd28b' },
+        { y:2029, label:'تاب‌آوری/ریسک ژئو', tone:'#ffb4b4' },
+        { y:2031, label:'استانداردسازی/ESG', tone:'#aef7d3' },
+      ];
+      markers.forEach(m=>{
+        const i = years.indexOf(m.y);
+        if(i<0) return;
+        const x = pad + i*((w-2*pad)/(years.length-1));
+        const cy = 56;
+        const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        c.setAttribute('cx', x); c.setAttribute('cy', cy); c.setAttribute('r','7');
+        c.setAttribute('fill', m.tone); c.setAttribute('opacity','0.9');
+        svg.appendChild(c);
+
+        const lab = document.createElementNS('http://www.w3.org/2000/svg','text');
+        lab.setAttribute('x', x); lab.setAttribute('y', cy - 12);
+        lab.setAttribute('text-anchor','middle'); lab.setAttribute('class','tick');
+        lab.textContent = m.label;
+        svg.appendChild(lab);
+      });
+    }
+    renderTimeline();
+
+    // ---------------------------
+    // Scenario logic
+    // ---------------------------
+    const decisionEl = document.getElementById('decision');
+    const riskEl = document.getElementById('risk');
+    const horizonEl = document.getElementById('horizon');
+    const skillsEl = document.getElementById('skills');
+
+    const oppVal = document.getElementById('oppVal');
+    const oppTrend = document.getElementById('oppTrend');
+    const riskVal = document.getElementById('riskVal');
+    const riskNote = document.getElementById('riskNote');
+    const uncVal = document.getElementById('uncVal');
+
+    const whyList = document.getElementById('whyList');
+    const whySources = document.getElementById('whySources');
+    const actionsEl = document.getElementById('actions');
+
+    function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+    function baseByDecision(dec){
+      // baseline profiles for different decisions
+      switch(dec){
+        case 'career': return { career:0.62, wealth:0.55, well:0.60, impact:0.58, res:0.57 };
+        case 'startup': return { career:0.58, wealth:0.60, well:0.52, impact:0.64, res:0.55 };
+        case 'invest': return { career:0.52, wealth:0.65, well:0.56, impact:0.50, res:0.58 };
+        case 'relocate': return { career:0.60, wealth:0.56, well:0.62, impact:0.55, res:0.60 };
+        case 'learn': return { career:0.66, wealth:0.54, well:0.60, impact:0.58, res:0.56 };
+      }
+      return { career:0.58, wealth:0.58, well:0.58, impact:0.58, res:0.58 };
+    }
+
+    function computeUncertainty(riskTolerance, horizon, trendSet){
+      let u = 0.1 + (horizon/36)*0.12; // longer horizon -> more uncertainty
+      if(riskTolerance==='low') u += 0.04;
+      if(riskTolerance==='high') u -= 0.02;
+      // trends effect
+      trendSet.forEach(id=>{
+        const t = TRENDS.find(x=>x.id===id);
+        if(!t) return;
+        u += t.unc * 0.5 / (2 + trendSet.size*0.3);
+      });
+      return clamp01(u);
+    }
+
+    function computeScores(){
+      const dec = decisionEl.value;
+      const riskTol = riskEl.value;
+      const horizon = Number(horizonEl.value);
+      const skills = (skillsEl.value || '').toLowerCase();
+
+      // start from baseline by decision
+      scores = baseByDecision(dec);
+      let opportunity = 0.58, systemicRisk = 0.38;
+
+      // trends contribution
+      selectedTrends.forEach(id=>{
+        const t = TRENDS.find(x=>x.id===id);
+        if(!t) return;
+        opportunity += t.opp * 0.42/(1 + selectedTrends.size*0.25);
+        systemicRisk += t.risk * 0.50/(1 + selectedTrends.size*0.25);
+
+        // distribute to dimensions heuristically
+        scores.career += (t.opp - t.risk*0.15)*0.20;
+        scores.wealth += (t.opp - t.risk*0.10)*0.24;
+        scores.impact += (t.opp)*0.22;
+        scores.res += (0.12 - t.risk*0.18);
+        scores.well += (0.08 - t.risk*0.06);
+      });
+
+      // skills effect
+      const skillMap = [
+        { key:['ai','ml','data','هوش','داده'], dim:'career', delta:0.06 },
+        { key:['climate','energy','esg','انرژی','اقلیم'], dim:'impact', delta:0.05 },
+        { key:['product','design','طراحی','محصول'], dim:'career', delta:0.03 },
+        { key:['security','امنیت','cyber'], dim:'res', delta:0.05 },
+        { key:['finance','quant','مالی'], dim:'wealth', delta:0.05 },
+      ];
+      skillMap.forEach(m=>{
+        if(m.key.some(k=>skills.includes(k))){
+          scores[m.dim] += m.delta;
+          opportunity += m.delta*0.6;
+        }
+      });
+
+      // risk tolerance scaling
+      const riskScale = riskTol==='low'? -0.04 : (riskTol==='high'? +0.03 : 0);
+      systemicRisk = clamp01(systemicRisk + riskScale);
+
+      // horizon dampen opportunity for very short horizons
+      if(horizon<=6) opportunity -= 0.03;
+
+      // normalize and set bands
+      for(const k in scores) scores[k] = clamp01(scores[k]);
+      const unc = computeUncertainty(riskTol, horizon, selectedTrends);
+
+      const bandBase = unc*0.22;
+      bands = {
+        career: bandBase * 0.95,
+        wealth: bandBase * 1.00,
+        well:   bandBase * 0.9,
+        impact: bandBase * 0.85,
+        res:    bandBase * 0.95,
+      };
+
+      // KPIs
+      oppVal.textContent = Math.round(clamp01(opportunity)*100) + '%';
+      oppTrend.textContent = opportunity>0.58? 'صعود ملایم' : 'نیاز به بهبود';
+      oppTrend.className = 'trend ' + (opportunity>0.58? 'good':'neutral');
+      riskVal.textContent = Math.round(systemicRisk*100) + '%';
+      riskNote.textContent = systemicRisk>0.55? 'ریسک بالاتر از حد نرمال' : (systemicRisk<0.35? 'ریسک کنترل‌شده' : 'ریسک متوسط');
+      riskNote.className = 'trend ' + (systemicRisk>0.55? 'bad' : (systemicRisk<0.35? 'good':'neutral'));
+      uncVal.textContent = Math.round(unc*100) + '%';
+
+      drawRadar();
+      renderWhy(dec, riskTol, horizon, unc);
+      renderActions(dec, riskTol, horizon);
+    }
+
+    function renderWhy(dec, riskTol, horizon, unc){
+      const reasons = [
+        { title:'اثر ترندهای فعال', detail:`ترکیب ترندهای انتخابی بر فرصت/ریسک اثر گذاشته است. افزایش عدم‌قطعیت: ${Math.round(unc*100)}%` , weight:0.34 },
+        { title:'تناسب تصمیم با مهارت‌ها', detail:'مهارت‌های واردشده با تصمیم مدنظر نگاشت شده‌اند؛ شکاف‌ها به‌صورت هدفمند در گام‌ها پوشش داده می‌شود.', weight:0.26 },
+        { title:'افق زمانی', detail:`افق ${horizon} ماهه دامنه باند عدم‌قطعیت را تغییر داده است.`, weight:0.18 },
+        { title:'تحمل ریسک', detail:`تنظیم ریسک ${riskTol==='low'?'محافظه‌کارانه':(riskTol==='high'?'تهاجمی':'متعادل')} بر وزن‌دهی اثرگذار بوده است.`, weight:0.12 },
+        { title:'میانگین تاریخی سناریوهای مشابه', detail:'پروفایل‌های همسو در ۲۴ ماه گذشته خروجی‌های نزدیک داشته‌اند (Heuristic).', weight:0.10 },
+      ];
+      whyList.innerHTML = '';
+      reasons.forEach(r=>{
+        const row = document.createElement('div');
+        row.className = 'reason';
+        row.innerHTML = `
+          <div style="min-width:8px; height:8px; background:#7ee787; border-radius:50%; margin-top:6px"></div>
+          <div style="flex:1">
+            <div style="color:#cfe3ff; font-size:13px; margin-bottom:4px">${r.title}</div>
+            <div class="muted" style="font-size:12px; margin-bottom:8px">${r.detail}</div>
+            <div class="bar"><span style="width:${Math.round(r.weight*100)}%"></span></div>
+          </div>
+        `;
+        whyList.appendChild(row);
+      });
+
+      // attach source chips subset (simulate relevance)
+      whySources.innerHTML = '';
+      const hash = (decisionEl.value + riskTol + horizon).length;
+      const take = 14; // show 14 contributing sources
+      for(let i=0;i<take;i++){
+        const s = SOURCES[(hash + i*3) % SOURCES.length];
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerHTML = `<span class="dot" style="background:${i%3===0?'#7ee787':(i%3===1?'#7aa2f7':'#ffd28b')}"></span>${s}`;
+        whySources.appendChild(chip);
+      }
+    }
+
+    function renderActions(decision, riskTol, horizon){
+      const acts = [];
+      // 30 days
+      acts.push({
+        horizon:'۳۰ روزه',
+        title: decision==='career' ? 'نمونه‌کار هدفمند + ۳ گفت‌وگوی اطلاعاتی' :
+               decision==='startup' ? 'مصاحبه ۱۰ مشتری + یک MVP کاغذی' :
+               decision==='invest' ? 'سند خط‌مشی سرمایه‌گذاری شخصی (IPS) ۱ صفحه‌ای' :
+               decision==='relocate' ? 'تحلیل ۳ شهر هدف با معیار هزینه/کیفیت/شبکه' :
+               'دوره ۲۰ ساعته مهارت کلیدی + تمرین عملی',
+        impact:'اثر: متوسط',
+        difficulty:'دشواری: کم',
+        tip: decision==='startup' ? 'به معیار «درد/تکرار/بودجه» برای اولویت مشکل بچسب.' :
+             decision==='career' ? '۳ شغل هدف = ۳ نمونه‌کار مطابق JD.' :
+             'مرحله کوچک ولی پیوسته؛ بازخورد سریع بگیر.'
+      });
+      // 90 days
+      acts.push({
+        horizon:'۹۰ روزه',
+        title: decision==='career' ? 'گواهی معتبر + ۲ پروژه متن‌باز/مشترک' :
+               decision==='startup' ? 'MVP واقعی + ۳۰ کاربر آزمایشی' :
+               decision==='invest' ? 'ریسک‌سنجی پرتفوی + سقف زیان تعریف‌شده' :
+               decision==='relocate' ? 'سفر اکتشافی/رویداد شبکه‌سازی محلی' :
+               'پروژه capstone با مربی/منتور',
+        impact:'اثر: بالا',
+        difficulty:'دشواری: متوسط',
+        tip:'به یک شاخص موفقیت واحد متعهد شو و هر هفته اندازه‌گیری کن.'
+      });
+      // 180 days
+      acts.push({
+        horizon:'۱۸۰ روزه',
+        title: decision==='career' ? 'جایگذاری در نقش هدف/ارتقا نقش فعلی' :
+               decision==='startup' ? 'درآمد ماهانه تکرارشونده + چرخه ساخت/اندازه‌گیری' :
+               decision==='invest' ? 'تنوع‌بخشی هوشمند + پوشش‌ریسک حداقلی' :
+               decision==='relocate' ? 'جابجایی با برنامه مالی/اجتماعی' :
+               'ارائه عمومی پروژه + شبکه حامیان',
+        impact:'اثر: بسیار بالا',
+        difficulty:'دشواری: متوسط/بالا',
+        tip: riskTol==='high' ? 'آزمایش‌های ریسک‌پذیر را با سقف زیان مشخص انجام بده.' : 'تاب‌آوری را با ذخیره زمانی/مالی تقویت کن.'
+      });
+
+      actionsEl.innerHTML = '';
+      acts.forEach(a=>{
+        const card = document.createElement('div'); card.className='actionCard';
+        card.innerHTML = `
+          <div class="pill"><span style="width:8px; height:8px; background:#7aa2f7; border-radius:50%"></span>${a.horizon}</div>
+          <div style="font-weight:700">${a.title}</div>
+          <div class="muted" style="font-size:13px">${a.tip}</div>
+          <div class="foot">
+            <span class="pill impact">⚡ ${a.impact}</span>
+            <span class="pill difficulty">🧩 ${a.difficulty}</span>
+          </div>
+        `;
+        actionsEl.appendChild(card);
+      });
+    }
+
+    function recompute(){ computeScores(); }
+    decisionEl.onchange = recompute;
+    riskEl.onchange = recompute;
+    horizonEl.onchange = recompute;
+    skillsEl.oninput = ()=>{ // debounce light
+      clearTimeout(skillsEl._t); skillsEl._t = setTimeout(recompute, 300);
+    }
+
+    recompute();
+
+    // ---------------------------
+    // Save / Export / Theme
+    // ---------------------------
+    const saveBtn = document.getElementById('saveBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const themeToggle = document.getElementById('themeToggle');
+
+    // load theme
+    const savedTheme = localStorage.getItem('afx_theme');
+    if(savedTheme==='light'){ document.body.classList.add('light'); themeToggle.checked = true; }
+
+    themeToggle.addEventListener('change', ()=>{
+      document.body.classList.toggle('light', themeToggle.checked);
+      localStorage.setItem('afx_theme', themeToggle.checked? 'light':'dark');
     });
-  }
 
-  function simulate() {
-    const profile = {
-      age: parseInt(document.getElementById('age').value || '26', 10),
-      location: document.getElementById('location').value || '—',
-      skills: document.getElementById('skills').value || '',
-      risk: document.getElementById('risk').value,
-      goal: document.getElementById('goal').value
-    };
-    const decisionKey = getActiveKey('decisions') || 'startup';
-    const trendKeys = getActiveKeys('trends');
-    const scores = score(profile, decisionKey, trendKeys);
-
-    // KPIs
-    document.getElementById('k-career').textContent = pct(scores.career);
-    document.getElementById('k-wealth').textContent = pct(scores.wealth);
-    document.getElementById('k-wellbeing').textContent = pct(scores.wellbeing);
-    document.getElementById('k-sustainability').textContent = pct(scores.sustainability);
-    document.getElementById('k-resilience').textContent = pct(scores.resilience);
-
-    // Radar
-    drawRadar(document.getElementById('radar'), scores);
-
-    // Mood bar pointer
-    const overall = (scores.career + scores.wealth + scores.wellbeing + scores.sustainability + scores.resilience)/5;
-    document.getElementById('moodPtr').style.left = (pct(overall)) + '%';
-
-    // Narrative
-    document.getElementById('narrative').textContent = buildNarrative(profile, decisionKey, scores, trendKeys);
-
-    // Risks & opportunities
-    const roEl = document.getElementById('risksOps'); roEl.innerHTML = '';
-    buildRiskOps(decisionKey, trendKeys).forEach(x => {
-      const d = document.createElement('div'); d.className = 'item';
-      d.innerHTML = `<span class="${x.type==='risk'?'danger':'ok'}">${x.type==='risk'?'ریسک':'فرصت'}:</span> ${x.text}`; roEl.appendChild(d);
+    saveBtn.addEventListener('click', ()=>{
+      const payload = {
+        decision: decisionEl.value,
+        risk: riskEl.value,
+        horizon: horizonEl.value,
+        skills: skillsEl.value,
+        trends: Array.from(selectedTrends),
+        timestamp: Date.now()
+      };
+      localStorage.setItem('afx_lastScenario', JSON.stringify(payload));
+      saveBtn.textContent = 'ذخیره شد ✓';
+      setTimeout(()=> saveBtn.textContent = 'ذخیره سناریو', 1500);
     });
 
-    // Timeline
-    renderTimeline(document.getElementById('timeline'), buildTimeline(decisionKey));
+    exportBtn.addEventListener('click', ()=>{
+      alert('خروجی PDF در گام بعدی فعال می‌شود. در حال حاضر می‌توانید با Print به PDF خروجی بگیرید.');
+    });
 
-    // Persist
-    localStorage.setItem('future_mirror_last', JSON.stringify({ profile, decisionKey, trendKeys }));
-    setQuote();
-  }
-
-  document.getElementById('simulate').addEventListener('click', simulate);
-  document.getElementById('save').addEventListener('click', () => {
-    const name = prompt('نام سناریو را وارد کن:'); if (!name) return;
-    const data = localStorage.getItem('future_mirror_last'); if (!data) return alert('اول شبیه‌سازی کن.');
-    localStorage.setItem('future_mirror_' + name, data); alert('ذخیره شد.');
-  });
-  document.getElementById('load').addEventListener('click', () => {
-    const name = prompt('نام سناریو برای بارگذاری:'); if (!name) return;
-    const data = localStorage.getItem('future_mirror_' + name); if (!data) return alert('پیدا نشد.');
-    const { profile, decisionKey, trendKeys } = JSON.parse(data);
-    document.getElementById('age').value = profile.age;
-    document.getElementById('location').value = profile.location;
-    document.getElementById('skills').value = profile.skills;
-    document.getElementById('risk').value = profile.risk;
-    document.getElementById('goal').value = profile.goal;
-    // chips
-    [...document.getElementById('decisions').children].forEach(c => c.classList.toggle('active', c.dataset.id===decisionKey));
-    [...document.getElementById('trends').children].forEach(c => c.classList.toggle('active', trendKeys.includes(c.dataset.id)));
-    simulate();
-  });
-
-  // Auto simulate once
-  simulate();
-</script>
+    // restore last scenario if exists
+    const last = localStorage.getItem('afx_lastScenario');
+    if(last){
+      try{
+        const p = JSON.parse(last);
+        decisionEl.value = p.decision || decisionEl.value;
+        riskEl.value = p.risk || riskEl.value;
+        horizonEl.value = p.horizon || horizonEl.value;
+        skillsEl.value = p.skills || '';
+        selectedTrends.clear(); (p.trends || []).forEach(t=>selectedTrends.add(t));
+        renderTrendChips(); recompute();
+      }catch(e){}
+    }
+  </script>
 </body>
 </html>
