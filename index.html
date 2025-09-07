@@ -2,183 +2,189 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>آینه آینده X — شبیه‌ساز تصمیمات 2030+</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
-
   :root {
-    --bg1: #0f2027;
-    --bg2: #203a43;
-    --bg3: #2c5364;
+    --bg1: #0f2027; --bg2: #203a43; --bg3: #2c5364; --bg4: #1a1a2e;
     --glass: rgba(255,255,255,0.08);
-    --border: rgba(255,255,255,0.15);
-    --text: #f0f4ff;
-    --muted: #a8b3cf;
-    --accent: #7c5cff;
-    --ok: #00d2a8;
-    --warn: #ffcd4d;
-    --bad: #ff6b6b;
+    --border: rgba(255,255,255,0.16);
+    --text: #f1f5ff; --muted: #b3bed6; --heading: #8f7cff;
+    --accent: #7c5cff; --accent-2: #00d2a8; --warn: #ffcd4d; --bad: #ff6b6b;
+    --chip-bg: rgba(255,255,255,0.08);
+    --input-bg: rgba(0,0,0,0.3);
+    --canvas-bg: rgba(0,0,0,0.25);
+  }
+  /* Light theme overrides */
+  .light {
+    --bg1: #f7f9fc; --bg2: #e7ecf5; --bg3: #dde6ff; --bg4: #ffffff;
+    --glass: rgba(255,255,255,0.7);
+    --border: rgba(0,0,0,0.08);
+    --text: #0f172a; --muted: #475569; --heading: #5a3fff;
+    --accent: #5a3fff; --accent-2: #089981; --warn: #eab308; --bad: #ef4444;
+    --chip-bg: rgba(0,0,0,0.06);
+    --input-bg: rgba(255,255,255,0.7);
+    --canvas-bg: rgba(0,0,0,0.06);
   }
 
   * { box-sizing: border-box; }
   body {
-    margin: 0;
-    font-family: 'Vazirmatn', sans-serif;
-    color: var(--text);
-    background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), #1a1a2e);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    margin: 0; font-family: 'Vazirmatn', sans-serif; color: var(--text);
+    background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
+    background-size: 400% 400%; animation: gradientBG 18s ease infinite;
+    overflow-x: hidden;
   }
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+
+  /* 3D background canvases */
+  canvas#bg, canvas#grid {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;
   }
+  canvas#grid { z-index: -1; }
 
   header {
-    padding: 24px;
-    text-align: center;
-    backdrop-filter: blur(10px);
-    background: var(--glass);
+    position: sticky; top: 0; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px; background: var(--glass); backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
-    animation: fadeIn 1s ease;
   }
-  h1 { margin: 0; font-size: 28px; color: var(--accent); }
-  p.sub { margin: 0; color: var(--muted); }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .logo {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: radial-gradient(120% 120% at 30% 30%, #fff2 0%, #0000 60%), linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 4px 20px rgba(124,92,255,0.45);
+  }
+  h1 { font-size: 20px; margin: 0; color: var(--heading); }
+  .sub { margin: 0; color: var(--muted); font-size: 12px; }
+
+  .theme-toggle {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    background: var(--chip-bg); border: 1px solid var(--border);
+    padding: 8px 12px; border-radius: 999px; color: var(--text); user-select: none;
+  }
 
   .container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 24px;
-    display: grid;
-    gap: 20px;
+    max-width: 1200px; margin: 20px auto; padding: 0 16px;
+    display: grid; gap: 20px;
+    grid-template-columns: 1fr; 
   }
-  @media(min-width: 900px) {
-    .container { grid-template-columns: 380px 1fr; }
-  }
+  @media (min-width: 980px) { .container { grid-template-columns: 380px 1fr; } }
 
   .card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    animation: fadeInUp 0.8s ease;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 16px;
+    padding: 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    animation: fadeInUp 0.8s ease; 
   }
-  .card h3 { margin-top: 0; color: var(--accent); }
+  .card h3 { margin: 0 0 10px; color: var(--heading); font-size: 16px; }
 
-  label { font-size: 13px; color: var(--muted); margin-top: 10px; display: block; }
+  label { font-size: 12px; color: var(--muted); margin-top: 10px; display: block; }
   input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 4px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: rgba(0,0,0,0.3);
-    color: var(--text);
-    outline: none;
-    transition: border 0.3s;
+    width: 100%; padding: 10px; margin-top: 6px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--input-bg); color: var(--text); outline: none; transition: border 0.2s;
   }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--accent);
-  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
   .chip {
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s;
+    padding: 6px 12px; border-radius: 20px; background: var(--chip-bg);
+    border: 1px solid var(--border); font-size: 12px; cursor: pointer; transition: 0.25s;
   }
-  .chip:hover { background: rgba(255,255,255,0.15); }
-  .chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .chip:hover { transform: translateY(-1px); }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
   .btn {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
+    background: var(--accent); color: white; border: none; padding: 10px 14px; border-radius: 10px;
+    cursor: pointer; font-weight: 600; transition: 0.25s;
   }
-  .btn:hover { background: #6a4de0; }
-  .btn.secondary { background: rgba(255,255,255,0.1); }
-  .btn.secondary:hover { background: rgba(255,255,255,0.2); }
+  .btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+  .btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
 
-  .kpi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
-  .k {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 8px;
-    text-align: center;
+  .kpi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
+  .k { background: var(--chip-bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; }
+  .k .v { font-weight: 700; font-size: 18px; }
+  .k .t { color: var(--muted); font-size: 11px; }
+
+  canvas#radar { width: 100%; height: 280px; background: var(--canvas-bg); border-radius: 12px; }
+
+  .mood-wrap { margin-top: 8px; }
+  .mood-label { display:flex; justify-content:space-between; font-size: 12px; color: var(--muted); }
+  .mood-bar {
+    height: 10px; border-radius: 999px; margin-top: 6px;
+    background: linear-gradient(90deg, #ff3b3b, #ffcd4d, #00d2a8);
+    position: relative; overflow: hidden; border: 1px solid var(--border);
   }
-  .k .v { font-size: 20px; font-weight: bold; }
-  .k .t { font-size: 12px; color: var(--muted); }
-
-  canvas {
-    width: 100%;
-    background: rgba(0,0,0,0.2);
-    border-radius: 10px;
-    margin-top: 10px;
+  .mood-pointer {
+    position: absolute; top: -4px; width: 2px; height: 18px; background: var(--text);
+    box-shadow: 0 0 8px rgba(255,255,255,0.7);
   }
 
-  .item {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 10px;
-    margin-top: 6px;
-  }
-  .danger { color: var(--bad); }
-  .ok { color: var(--ok); }
+  .item { background: var(--chip-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-top: 8px; }
+  .danger { color: var(--bad); } .ok { color: var(--accent-2); }
 
-  .timeline { border-right: 2px dashed var(--border); padding-right: 10px; margin-top: 10px; }
-  .tl-item { margin-bottom: 8px; }
-  .tl-time { font-size: 12px; color: var(--muted); }
+  /* SVG Timeline */
+  .timeline-wrap { margin-top: 10px; }
+  svg.timeline { width: 100%; height: 140px; background: var(--canvas-bg); border-radius: 12px; }
+  .tl-label { font-size: 11px; fill: var(--text); opacity: 0.85; }
+  .tl-year { font-size: 10px; fill: var(--muted); }
+  .tl-dot { filter: drop-shadow(0 0 6px rgba(124,92,255,0.7)); }
 
-  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-  @keyframes fadeInUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+  /* Quote */
+  .quote { font-size: 13px; color: var(--muted); margin-top: 10px; border-right: 3px solid var(--accent); padding-right: 10px; }
+
+  @keyframes fadeInUp { from {opacity:0; transform: translateY(16px)} to {opacity:1; transform: translateY(0)} }
 </style>
 </head>
 <body>
 
+<canvas id="bg"></canvas>
+<canvas id="grid"></canvas>
+
 <header>
-  <h1>🔮 آینه آینده X</h1>
-  <p class="sub">تصمیم‌های امروزت را با روندهای جهانی ترکیب کن و آینده‌ات را ببین</p>
+  <div class="brand">
+    <div class="logo" aria-hidden="true"></div>
+    <div>
+      <h1>آینه آینده X</h1>
+      <p class="sub">تصمیم‌های امروزت + روندهای جهانی = آینده‌ای که می‌بینی و می‌سازی</p>
+    </div>
+  </div>
+  <div class="theme-toggle" id="themeToggle" role="button" aria-label="تغییر حالت رنگ">
+    <span id="themeIcon">🌙</span><span id="themeText">حالت تاریک</span>
+  </div>
 </header>
 
 <div class="container">
   <!-- Sidebar -->
-  <div class="card">
+  <div class="card" id="sidebar">
     <h3>پروفایل و تصمیم</h3>
+
     <label>سن</label>
-    <input id="age" type="number" placeholder="مثلاً 25">
+    <input id="age" type="number" min="12" max="90" placeholder="مثلاً 24">
+
     <label>شهر/کشور</label>
     <input id="location" type="text" placeholder="مثلاً تبریز، ایران">
+
     <label>مهارت‌ها</label>
-    <input id="skills" type="text" placeholder="مثلاً برنامه‌نویسی، طراحی">
+    <input id="skills" type="text" placeholder="مثلاً JavaScript, طراحی محصول, زبان انگلیسی">
+
     <label>تحمل ریسک</label>
     <select id="risk">
       <option value="low">پایین</option>
       <option value="medium" selected>متوسط</option>
       <option value="high">بالا</option>
     </select>
-    <label>هدف اصلی</label>
+
+    <label>هدف اصلی تا 2030</label>
     <select id="goal">
       <option value="career">جهش شغلی</option>
-      <option value="wealth">ثروت</option>
-      <option value="wellbeing">رفاه</option>
-      <option value="sustainability">پایداری</option>
-      <option value="resilience">تاب‌آوری</option>
+      <option value="wealth">ثروت و سرمایه</option>
+      <option value="wellbeing">سلامت و رفاه</option>
+      <option value="sustainability">پایداری و اثر اجتماعی</option>
+      <option value="resilience">تاب‌آوری و استقلال</option>
     </select>
 
-    <label>نوع تصمیم</label>
+    <label style="margin-top:12px;">نوع تصمیم</label>
     <div class="chips" id="decisions">
       <div class="chip active" data-id="startup">استارتاپ</div>
       <div class="chip" data-id="study">تحصیل</div>
@@ -187,6 +193,401 @@
       <div class="chip" data-id="switch">تغییر شغل</div>
     </div>
 
-    <label>روندهای جهانی</label>
+    <label style="margin-top:12px;">روندهای جهانی</label>
     <div class="chips" id="trends">
-      <div
+      <div class="chip active" data-id="AI">هوش مصنوعی</div>
+      <div class="chip active" data-id="Climate">اقلیم و پایداری</div>
+      <div class="chip" data-id="Geo">ژئوپلیتیک</div>
+      <div class="chip" data-id="Urban">شهرهای هوشمند</div>
+      <div class="chip" data-id="Demography">جمعیت و سالمندی</div>
+      <div class="chip" data-id="Culture">سبک زندگی دیجیتال</div>
+    </div>
+
+    <div class="btns">
+      <button class="btn" id="simulate">شبیه‌سازی</button>
+      <button class="btn secondary" id="save">ذخیره سناریو</button>
+      <button class="btn secondary" id="load">بارگذاری</button>
+    </div>
+
+    <div class="quote" id="quote"></div>
+  </div>
+
+  <!-- Main -->
+  <div class="card">
+    <h3>نتایج سناریو</h3>
+
+    <div class="kpi">
+      <div class="k"><div class="v" id="k-career">–</div><div class="t">شغل/مهارت</div></div>
+      <div class="k"><div class="v" id="k-wealth">–</div><div class="t">ثروت/سرمایه</div></div>
+      <div class="k"><div class="v" id="k-wellbeing">–</div><div class="t">رفاه/سلامت</div></div>
+      <div class="k"><div class="v" id="k-sustainability">–</div><div class="t">پایداری</div></div>
+      <div class="k"><div class="v" id="k-resilience">–</div><div class="t">تاب‌آوری</div></div>
+    </div>
+
+    <canvas id="radar" width="700" height="320"></canvas>
+
+    <div class="mood-wrap">
+      <div class="mood-label"><span>ریسک بالا</span><span>آینده امیدوارکننده</span></div>
+      <div class="mood-bar" id="mood"><div class="mood-pointer" id="moodPtr" style="left:50%"></div></div>
+    </div>
+
+    <div class="item" id="narrative" style="margin-top:12px;">برای شروع، سناریو را شبیه‌سازی کن.</div>
+
+    <h3 style="margin-top:16px;">ریسک‌ها و فرصت‌ها</h3>
+    <div id="risksOps"></div>
+
+    <h3 style="margin-top:16px;">تایم‌لاین احتمالی 2025–2032</h3>
+    <div class="timeline-wrap">
+      <svg class="timeline" id="timeline" viewBox="0 0 800 140" preserveAspectRatio="none">
+        <!-- Path and nodes will be generated by JS -->
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // Theme handling
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem('fx_theme') || 'dark';
+  if (savedTheme === 'light') document.body.classList.add('light');
+  document.getElementById('themeIcon').textContent = document.body.classList.contains('light') ? '🌞' : '🌙';
+  document.getElementById('themeText').textContent = document.body.classList.contains('light') ? 'حالت روشن' : 'حالت تاریک';
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    const isLight = document.body.classList.contains('light');
+    localStorage.setItem('fx_theme', isLight ? 'light' : 'dark');
+    document.getElementById('themeIcon').textContent = isLight ? '🌞' : '🌙';
+    document.getElementById('themeText').textContent = isLight ? 'حالت روشن' : 'حالت تاریک';
+  });
+
+  // Motivational quotes (future-centric)
+  const QUOTES = [
+    "آینده چیزی نیست که واردش می‌شویم؛ چیزی است که می‌سازیم.",
+    "ترندها جهت بادند؛ بادبانت را تنظیم کن، نه اینکه منتظر آرامش دریا باشی.",
+    "توانایی یادگیری سریع، سوخت اصلی مزیت رقابتی توست.",
+    "هر تصمیم کوچک امروز، اهرمی برای فردای بزرگ‌تر است.",
+    "شجاعت، میان‌برِ عبور از عدم قطعیت است."
+  ];
+  function setQuote() {
+    const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    document.getElementById('quote').textContent = "«" + q + "»";
+  }
+  setQuote();
+
+  // Three.js starfield background
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 6;
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  const starGeo = new THREE.SphereGeometry(0.04, 12, 12);
+  const starMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const stars = [];
+  for (let i = 0; i < 400; i++) {
+    const s = new THREE.Mesh(starGeo, starMat);
+    s.position.set(
+      THREE.MathUtils.randFloatSpread(100),
+      THREE.MathUtils.randFloatSpread(100),
+      THREE.MathUtils.randFloatSpread(100)
+    );
+    scene.add(s); stars.push(s);
+  }
+  // Subtle movement
+  function animateBg() {
+    requestAnimationFrame(animateBg);
+    stars.forEach(st => { st.rotation.x += 0.001; st.rotation.y += 0.001; });
+    renderer.render(scene, camera);
+  }
+  animateBg();
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // Neon grid canvas background
+  const grid = document.getElementById('grid');
+  const gctx = grid.getContext('2d');
+  function resizeGrid() { grid.width = window.innerWidth; grid.height = window.innerHeight; }
+  resizeGrid(); window.addEventListener('resize', resizeGrid);
+  function drawGrid(t = 0) {
+    gctx.clearRect(0,0,grid.width, grid.height);
+    const spacing = 50, speed = 0.02;
+    gctx.strokeStyle = 'rgba(124,92,255,0.18)';
+    gctx.lineWidth = 1;
+    const offset = (t * speed) % spacing;
+    // verticals
+    for (let x = -spacing; x < grid.width + spacing; x += spacing) {
+      gctx.beginPath(); gctx.moveTo(x + offset, 0); gctx.lineTo(x + offset, grid.height); gctx.stroke();
+    }
+    // horizontals
+    for (let y = -spacing; y < grid.height + spacing; y += spacing) {
+      gctx.beginPath(); gctx.moveTo(0, y + offset); gctx.lineTo(grid.width, y + offset); gctx.stroke();
+    }
+    requestAnimationFrame(drawGrid);
+  }
+  requestAnimationFrame(drawGrid);
+
+  // Data model
+  const MEGATRENDS = {
+    AI: { impact: { career: 0.9, wealth: 0.7, wellbeing: 0.3, sustainability: 0.4, resilience: 0.5 },
+          risks: ["جابجایی شغلی", "شکاف مهارتی"], ops: ["افزایش بهره‌وری", "خلق نقش‌های نو"] },
+    Climate: { impact: { career: 0.5, wealth: 0.6, wellbeing: 0.6, sustainability: 0.95, resilience: 0.7 },
+          risks: ["هزینه انطباق", "اختلال زنجیره"], ops: ["بازارهای سبز", "نوآوری انرژی"] },
+    Geo: { impact: { career: 0.4, wealth: 0.5, wellbeing: 0.3, sustainability: 0.3, resilience: 0.9 },
+          risks: ["نوسان ژئوپلیتیک"], ops: ["تنوع‌بخشی و بومی‌سازی"] },
+    Urban: { impact: { career: 0.6, wealth: 0.5, wellbeing: 0.7, sustainability: 0.6, resilience: 0.5 },
+          risks: ["وابستگی زیرساختی"], ops: ["خدمات شهری هوشمند"] },
+    Demography: { impact: { career: 0.5, wealth: 0.4, wellbeing: 0.8, sustainability: 0.3, resilience: 0.6 },
+          risks: ["فشار رفاهی"], ops: ["بازار سلامت و مراقبت"] },
+    Culture: { impact: { career: 0.7, wealth: 0.6, wellbeing: 0.7, sustainability: 0.4, resilience: 0.6 },
+          risks: ["فرسودگی دیجیتال"], ops: ["اقتصاد خالقان، ریموت"] }
+  };
+  const DECISIONS = {
+    study:   { career: 0.85, wealth: 0.45, wellbeing: 0.5,  sustainability: 0.4,  resilience: 0.6, verb: "تحصیل/مهارت‌آموزی" },
+    immigrate:{career: 0.7,  wealth: 0.6,  wellbeing: 0.55, sustainability: 0.45, resilience: 0.7, verb: "مهاجرت هدفمند" },
+    startup: { career: 0.8,  wealth: 0.8,  wellbeing: 0.45, sustainability: 0.55, resilience: 0.7, verb: "راه‌اندازی استارتاپ" },
+    invest:  { career: 0.5,  wealth: 0.9,  wellbeing: 0.55, sustainability: 0.4,  resilience: 0.65, verb: "سرمایه‌گذاری هوشمند" },
+    switch:  { career: 0.75, wealth: 0.55, wellbeing: 0.6,  sustainability: 0.45, resilience: 0.7, verb: "تغییر شغل/حوزه" }
+  };
+  const clamp01 = x => Math.max(0, Math.min(1, x));
+  const pct = x => Math.round(clamp01(x) * 100);
+
+  // Chips
+  function wireChips(id, single=false) {
+    const el = document.getElementById(id);
+    el.addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip'); if (!chip) return;
+      if (single) { [...el.children].forEach(c=>c.classList.remove('active')); chip.classList.add('active'); }
+      else chip.classList.toggle('active');
+    });
+  }
+  wireChips('decisions', true); wireChips('trends');
+
+  // Radar chart
+  function drawRadar(canvas, values) {
+    const ctx = canvas.getContext('2d'); const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0,0,W,H);
+    const cx = W/2, cy = H/2 + 10; const axes = [
+      { key:'career', label:'شغل' }, { key:'wealth', label:'ثروت' }, { key:'wellbeing', label:'رفاه' },
+      { key:'sustainability', label:'پایداری' }, { key:'resilience', label:'تاب‌آوری' }
+    ];
+    const R = Math.min(W,H)/2 - 40;
+    // grid rings
+    ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--border'); ctx.lineWidth = 1;
+    for (let r=0.2; r<=1.0; r+=0.2) {
+      ctx.beginPath();
+      axes.forEach((a,i)=> {
+        const ang = (Math.PI*2/axes.length)*i - Math.PI/2;
+        const x = cx + Math.cos(ang)*R*r, y = cy + Math.sin(ang)*R*r;
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }); ctx.closePath(); ctx.stroke();
+    }
+    // axes + labels
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text'); ctx.globalAlpha = 0.85;
+    ctx.font = '12px Vazirmatn, sans-serif';
+    axes.forEach((a,i)=>{
+      const ang = (Math.PI*2/axes.length)*i - Math.PI/2;
+      const x = cx + Math.cos(ang)*(R+12), y = cy + Math.sin(ang)*(R+12);
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx + Math.cos(ang)*R, cy + Math.sin(ang)*R); ctx.stroke();
+      ctx.textAlign = Math.cos(ang)>0.1 ? 'left' : (Math.cos(ang)<-0.1 ? 'right' : 'center');
+      ctx.fillText(a.label, x, y);
+    });
+    ctx.globalAlpha = 1;
+    // polygon
+    ctx.beginPath();
+    axes.forEach((a,i)=>{
+      const v = clamp01(values[a.key]); const ang = (Math.PI*2/axes.length)*i - Math.PI/2;
+      const x = cx + Math.cos(ang)*R*v, y = cy + Math.sin(ang)*R*v;
+      if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    // gradient fill
+    const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, R);
+    grad.addColorStop(0, 'rgba(124,92,255,0.35)'); grad.addColorStop(1, 'rgba(0,210,168,0.15)');
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--heading'); ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  function getActiveKey(containerId) {
+    const el = document.getElementById(containerId); const chip = el.querySelector('.chip.active');
+    return chip ? chip.dataset.id : null;
+  }
+  function getActiveKeys(containerId) {
+    return [...document.getElementById(containerId).querySelectorAll('.chip.active')].map(c=>c.dataset.id);
+  }
+
+  function score(profile, decisionKey, trendKeys) {
+    const base = DECISIONS[decisionKey];
+    const trendImpact = trendKeys.reduce((acc,k)=>{
+      const imp = MEGATRENDS[k].impact; Object.keys(acc).forEach(d=> acc[d]+=imp[d]); return acc;
+    }, { career:0, wealth:0, wellbeing:0, sustainability:0, resilience:0 });
+    const n = Math.max(1, trendKeys.length);
+    Object.keys(trendImpact).forEach(d=> trendImpact[d]/=n);
+    const rMod = profile.risk==='high' ? 0.08 : profile.risk==='low' ? -0.05 : 0;
+    const gBoost = { career:0, wealth:0, wellbeing:0, sustainability:0, resilience:0 }; gBoost[profile.goal]=0.1;
+    const skills = (profile.skills || "").toLowerCase();
+    const synergy = {
+      AI: /ai|هوش|data|دیتا/.test(skills) ? 0.08 : 0,
+      Climate: /محیط|energy|esg|انرژی/.test(skills) ? 0.07 : 0,
+      Geo: /supply|logistics|زنجیره/.test(skills) ? 0.05 : 0,
+      Urban: /iot|gis|mobility|حمل/.test(skills) ? 0.05 : 0,
+      Demography: /health|care|سلامت/.test(skills) ? 0.06 : 0,
+      Culture: /content|design|creator|طراحی/.test(skills) ? 0.06 : 0
+    };
+    const synergySum = trendKeys.reduce((s,k)=> s + (synergy[k]||0), 0);
+    const dims = ['career','wealth','wellbeing','sustainability','resilience'];
+    const scores = {}; dims.forEach(dim=>{
+      const v = base[dim]*0.55 + trendImpact[dim]*0.35 + gBoost[dim] + rMod + synergySum*0.2;
+      scores[dim] = clamp01(v);
+    });
+    return scores;
+  }
+
+  function buildNarrative(profile, decisionKey, scores, trendKeys) {
+    const verb = DECISIONS[decisionKey].verb;
+    const top = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+    const topTxt = { career:"مسیر شغلی‌ات جهش می‌گیرد.", wealth:"رشد سرمایه‌ات معنادار خواهد شد.", wellbeing:"کیفیت زندگی‌ات بهتر می‌شود.",
+      sustainability:"اثر اجتماعی/محیطی‌ات پررنگ می‌شود.", resilience:"تاب‌آوری‌ات تقویت می‌شود." }[top];
+    const trendLine = trendKeys.map(k => ({AI:"موج هوش مصنوعی",Climate:"گذار سبز",Geo:"بازپیکربندی ژئوپلیتیک",Urban:"شهرهای هوشمند",Demography:"تحول جمعیت",Culture:"سبک دیجیتال"}[k])).join("، ");
+    const riskText = profile.risk==='high' ? "ریسک‌پذیری تو می‌تواند بازدهی بزرگ‌تری بسازد."
+      : profile.risk==='low' ? "احتیاط تو ثبات بیشتری به مسیر می‌دهد." : "تعادل ریسک را حفظ کرده‌ای.";
+    const goalHint =
+      profile.goal==='career' ? "روی مهارت‌های کمیاب و پروژه‌های واقعی تمرکز کن." :
+      profile.goal==='wealth' ? "تنوع سرمایه‌گذاری و صندوق اضطراری را فراموش نکن." :
+      profile.goal==='wellbeing' ? "ریتم کار/زندگی را متوازن نگه دار." :
+      profile.goal==='sustainability' ? "استانداردهای ESG را در محصول/شغل دخیل کن." :
+      "شبکه‌سازی و چندمنبعی‌کردن درآمد، سپر توست.";
+    return `با انتخاب «${verb}» و تمرکز بر ${trendLine}، ${topTxt} ${riskText} اگر ${goalHint} مسیرت تا 2030 امن‌تر و پربازده‌تر خواهد شد.`;
+  }
+
+  function buildRiskOps(decisionKey, trendKeys) {
+    const items = [];
+    trendKeys.forEach(k => {
+      MEGATRENDS[k].risks.forEach(r => items.push({ type:'risk', text:`(${k}) ${r}` }));
+      MEGATRENDS[k].ops.forEach(o => items.push({ type:'op', text:`(${k}) ${o}` }));
+    });
+    if (decisionKey==='startup') { items.push({type:'risk', text:'نقدینگی 18–24 ماه اول'}); items.push({type:'op', text:'بازارهای دیجیتال جهانی'}); }
+    if (decisionKey==='immigrate') { items.push({type:'risk', text:'سازگاری فرهنگی/قانونی'}); items.push({type:'op', text:'اکوسیستم‌های نوآوری'}); }
+    return items;
+  }
+
+  function buildTimeline(decisionKey) {
+    const base = [
+      { y:'2025', t:'شروع و بازتنظیم' },
+      { y:'2026', t:'شبکه‌سازی هدفمند' },
+      { y:'2027', t:'MVP/KPI و اصلاح' },
+      { y:'2028', t:'گسترش مقیاس' },
+      { y:'2029', t:'تنوع‌بخشی' },
+      { y:'2030–2032', t:'تثبیت مزیت' }
+    ];
+    if (decisionKey==='startup') base[2].t = 'MVP و اولین مشتریان';
+    if (decisionKey==='invest') base[1].t = 'تدوین سیاست سرمایه‌گذاری';
+    if (decisionKey==='immigrate') base[0].t = 'آمادگی زبان و مدارک';
+    if (decisionKey==='study') base[1].t = 'مدارک/دوره‌های کلیدی';
+    if (decisionKey==='switch') base[0].t = 'بازآموزی و نمونه‌کار';
+    return base;
+  }
+
+  function renderTimeline(svg, data) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const W = svg.viewBox.baseVal.width || 800, H = svg.viewBox.baseVal.height || 140;
+    const pad = 40, yMid = H/2;
+    // path
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', `M ${pad} ${yMid} L ${W-pad} ${yMid}`);
+    path.setAttribute('stroke', getComputedStyle(document.body).getPropertyValue('--border')); path.setAttribute('fill','none'); path.setAttribute('stroke-width','2');
+    svg.appendChild(path);
+    const step = (W - pad*2) / (data.length - 1);
+    data.forEach((n,i)=>{
+      const x = pad + i*step; const y = yMid + (i%2===0? -18 : 18);
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      // line to node
+      const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+      l.setAttribute('x1', x); l.setAttribute('y1', yMid); l.setAttribute('x2', x); l.setAttribute('y2', y); l.setAttribute('stroke', getComputedStyle(document.body).getPropertyValue('--border'));
+      svg.appendChild(l);
+      // node
+      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '6'); c.setAttribute('fill', getComputedStyle(document.body).getPropertyValue('--heading')); c.setAttribute('class','tl-dot');
+      g.appendChild(c);
+      // labels
+      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x', x); txt.setAttribute('y', y + (i%2===0? -10 : 24)); txt.setAttribute('text-anchor','middle'); txt.setAttribute('class','tl-label'); txt.textContent = n.t;
+      g.appendChild(txt);
+      const yr = document.createElementNS('http://www.w3.org/2000/svg','text');
+      yr.setAttribute('x', x); yr.setAttribute('y', yMid + (i%2===0? -24 : 34)); yr.setAttribute('text-anchor','middle'); yr.setAttribute('class','tl-year'); yr.textContent = n.y;
+      svg.appendChild(yr);
+      svg.appendChild(g);
+    });
+  }
+
+  function simulate() {
+    const profile = {
+      age: parseInt(document.getElementById('age').value || '26', 10),
+      location: document.getElementById('location').value || '—',
+      skills: document.getElementById('skills').value || '',
+      risk: document.getElementById('risk').value,
+      goal: document.getElementById('goal').value
+    };
+    const decisionKey = getActiveKey('decisions') || 'startup';
+    const trendKeys = getActiveKeys('trends');
+    const scores = score(profile, decisionKey, trendKeys);
+
+    // KPIs
+    document.getElementById('k-career').textContent = pct(scores.career);
+    document.getElementById('k-wealth').textContent = pct(scores.wealth);
+    document.getElementById('k-wellbeing').textContent = pct(scores.wellbeing);
+    document.getElementById('k-sustainability').textContent = pct(scores.sustainability);
+    document.getElementById('k-resilience').textContent = pct(scores.resilience);
+
+    // Radar
+    drawRadar(document.getElementById('radar'), scores);
+
+    // Mood bar pointer
+    const overall = (scores.career + scores.wealth + scores.wellbeing + scores.sustainability + scores.resilience)/5;
+    document.getElementById('moodPtr').style.left = (pct(overall)) + '%';
+
+    // Narrative
+    document.getElementById('narrative').textContent = buildNarrative(profile, decisionKey, scores, trendKeys);
+
+    // Risks & opportunities
+    const roEl = document.getElementById('risksOps'); roEl.innerHTML = '';
+    buildRiskOps(decisionKey, trendKeys).forEach(x => {
+      const d = document.createElement('div'); d.className = 'item';
+      d.innerHTML = `<span class="${x.type==='risk'?'danger':'ok'}">${x.type==='risk'?'ریسک':'فرصت'}:</span> ${x.text}`; roEl.appendChild(d);
+    });
+
+    // Timeline
+    renderTimeline(document.getElementById('timeline'), buildTimeline(decisionKey));
+
+    // Persist
+    localStorage.setItem('future_mirror_last', JSON.stringify({ profile, decisionKey, trendKeys }));
+    setQuote();
+  }
+
+  document.getElementById('simulate').addEventListener('click', simulate);
+  document.getElementById('save').addEventListener('click', () => {
+    const name = prompt('نام سناریو را وارد کن:'); if (!name) return;
+    const data = localStorage.getItem('future_mirror_last'); if (!data) return alert('اول شبیه‌سازی کن.');
+    localStorage.setItem('future_mirror_' + name, data); alert('ذخیره شد.');
+  });
+  document.getElementById('load').addEventListener('click', () => {
+    const name = prompt('نام سناریو برای بارگذاری:'); if (!name) return;
+    const data = localStorage.getItem('future_mirror_' + name); if (!data) return alert('پیدا نشد.');
+    const { profile, decisionKey, trendKeys } = JSON.parse(data);
+    document.getElementById('age').value = profile.age;
+    document.getElementById('location').value = profile.location;
+    document.getElementById('skills').value = profile.skills;
+    document.getElementById('risk').value = profile.risk;
+    document.getElementById('goal').value = profile.goal;
+    // chips
+    [...document.getElementById('decisions').children].forEach(c => c.classList.toggle('active', c.dataset.id===decisionKey));
+    [...document.getElementById('trends').children].forEach(c => c.classList.toggle('active', trendKeys.includes(c.dataset.id)));
+    simulate();
+  });
+
+  // Auto simulate once
+  simulate();
+</script>
+</body>
+</html>
