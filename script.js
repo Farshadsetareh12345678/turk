@@ -1,30 +1,50 @@
-// گرفتن قیمت‌ها از API رایگان CoinGecko
-async function fetchPrices() {
-    const symbols = ['bitcoin', 'ethereum', 'tether'];
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${symbols.join(',')}&vs_currencies=usd&include_24hr_change=true`;
+let chart;
+const ctx = document.getElementById('priceChart').getContext('2d');
 
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const table = document.getElementById('priceTable');
-        table.innerHTML = '';
-
-        for (let key in data) {
-            const price = data[key].usd.toFixed(2);
-            const change = data[key].usd_24h_change.toFixed(2);
-            const row = `<tr>
-                <td>${key}</td>
-                <td>$${price}</td>
-                <td style="color:${change >= 0 ? 'lime' : 'red'}">${change}%</td>
-            </tr>`;
-            table.innerHTML += row;
-        }
-    } catch (err) {
-        console.error(err);
-    }
+async function fetchLivePrice(coin) {
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd`;
+    const res = await fetch(url);
+    const data = await res.json();
+    document.getElementById('livePrice').textContent = `$${data[coin].usd}`;
 }
 
-// ماشین‌حساب سود/ضرر
+async function fetchChartData(coin) {
+    const url = `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=usd&days=1&interval=hourly`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return {
+        labels: data.prices.map(p => new Date(p[0]).toLocaleTimeString('fa-IR')),
+        prices: data.prices.map(p => p[1])
+    };
+}
+
+async function updateChart() {
+    const coin = document.getElementById('coinSelect').value;
+    await fetchLivePrice(coin);
+    const chartData = await fetchChartData(coin);
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: `${coin} Price`,
+                data: chartData.prices,
+                borderColor: '#38bdf8',
+                backgroundColor: 'rgba(56,189,248,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+
 function calculateProfit() {
     const buy = parseFloat(document.getElementById('buyPrice').value);
     const sell = parseFloat(document.getElementById('sellPrice').value);
@@ -36,8 +56,9 @@ function calculateProfit() {
     }
 
     const profit = (sell - buy) * amount;
+    document.getElementById('result').style.color = profit >= 0 ? 'lime' : 'red';
     document.getElementById('result').textContent = `سود/ضرر شما: ${profit.toFixed(2)} USD`;
 }
 
-fetchPrices();
-setInterval(fetchPrices, 60000); // هر ۱ دقیقه آپدیت
+updateChart();
+setInterval(updateChart, 60000);
