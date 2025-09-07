@@ -1,13 +1,192 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Crypto Assistant Pro</title>
-    <meta name="description" content="اتاق فرمان تریدر کریپتو با داده‌های لحظه‌ای، سه‌بعدی و هوشمند." />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>آینه آینده X — شبیه‌ساز تصمیمات 2030+</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+  :root {
+    --bg1: #0f2027;
+    --bg2: #203a43;
+    --bg3: #2c5364;
+    --glass: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.15);
+    --text: #f0f4ff;
+    --muted: #a8b3cf;
+    --accent: #7c5cff;
+    --ok: #00d2a8;
+    --warn: #ffcd4d;
+    --bad: #ff6b6b;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Vazirmatn', sans-serif;
+    color: var(--text);
+    background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), #1a1a2e);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  header {
+    padding: 24px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    background: var(--glass);
+    border-bottom: 1px solid var(--border);
+    animation: fadeIn 1s ease;
+  }
+  h1 { margin: 0; font-size: 28px; color: var(--accent); }
+  p.sub { margin: 0; color: var(--muted); }
+
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+  }
+  @media(min-width: 900px) {
+    .container { grid-template-columns: 380px 1fr; }
+  }
+
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.8s ease;
+  }
+  .card h3 { margin-top: 0; color: var(--accent); }
+
+  label { font-size: 13px; color: var(--muted); margin-top: 10px; display: block; }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
+    color: var(--text);
+    outline: none;
+    transition: border 0.3s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .chip:hover { background: rgba(255,255,255,0.15); }
+  .chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  .btn:hover { background: #6a4de0; }
+  .btn.secondary { background: rgba(255,255,255,0.1); }
+  .btn.secondary:hover { background: rgba(255,255,255,0.2); }
+
+  .kpi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+  .k {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+  }
+  .k .v { font-size: 20px; font-weight: bold; }
+  .k .t { font-size: 12px; color: var(--muted); }
+
+  canvas {
+    width: 100%;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 6px;
+  }
+  .danger { color: var(--bad); }
+  .ok { color: var(--ok); }
+
+  .timeline { border-right: 2px dashed var(--border); padding-right: 10px; margin-top: 10px; }
+  .tl-item { margin-bottom: 8px; }
+  .tl-time { font-size: 12px; color: var(--muted); }
+
+  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+  @keyframes fadeInUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔮 آینه آینده X</h1>
+  <p class="sub">تصمیم‌های امروزت را با روندهای جهانی ترکیب کن و آینده‌ات را ببین</p>
+</header>
+
+<div class="container">
+  <!-- Sidebar -->
+  <div class="card">
+    <h3>پروفایل و تصمیم</h3>
+    <label>سن</label>
+    <input id="age" type="number" placeholder="مثلاً 25">
+    <label>شهر/کشور</label>
+    <input id="location" type="text" placeholder="مثلاً تبریز، ایران">
+    <label>مهارت‌ها</label>
+    <input id="skills" type="text" placeholder="مثلاً برنامه‌نویسی، طراحی">
+    <label>تحمل ریسک</label>
+    <select id="risk">
+      <option value="low">پایین</option>
+      <option value="medium" selected>متوسط</option>
+      <option value="high">بالا</option>
+    </select>
+    <label>هدف اصلی</label>
+    <select id="goal">
+      <option value="career">جهش شغلی</option>
+      <option value="wealth">ثروت</option>
+      <option value="wellbeing">رفاه</option>
+      <option value="sustainability">پایداری</option>
+      <option value="resilience">تاب‌آوری</option>
+    </select>
+
+    <label>نوع تصمیم</label>
+    <div class="chips" id="decisions">
+      <div class="chip active" data-id="startup">استارتاپ</div>
+      <div class="chip" data-id="study">تحصیل</div>
+      <div class="chip" data-id="immigrate">مهاجرت</div>
+      <div class="chip" data-id="invest">سرمایه‌گذاری</div>
+      <div class="chip" data-id="switch">تغییر شغل</div>
+    </div>
+
+    <label>روندهای جهانی</label>
+    <div class="chips" id="trends">
+      <div
