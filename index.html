@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>آینه آینده X — نسخه نهایی</title>
+<title>آینه آینده X — نسخه نهایی جامع</title>
 <meta name="color-scheme" content="dark light" />
 <style>
   :root{
@@ -28,11 +28,9 @@
   .btn:hover{transform:translateY(-1px)}
   .toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px}
   .toggle input{accent-color:var(--accent);width:18px;height:18px}
-
   .container{max-width:1240px;margin:16px auto 60px;padding:0 16px}
   .grid{display:grid;grid-template-columns:360px 1fr;gap:14px}
   @media (max-width:1020px){.grid{grid-template-columns:1fr}}
-
   .panel{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:16px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.06)}
   .panel h2{font-size:16px;margin:0 0 8px 0;color:#cfe3ff}
   .panel p{color:var(--muted);margin:6px 0 10px 0}
@@ -83,8 +81,15 @@
   .analysisBox{background:linear-gradient(180deg,#0e1522,#0c111b);border:1px solid var(--border);border-radius:14px;padding:12px;line-height:1.9}
   .analysisBox .rec{margin-top:10px;padding:8px;border-left:3px solid var(--accent);background:rgba(126,231,135,.06);border-radius:8px}
   .analysisBox .reason{font-size:12px;color:var(--muted);margin-top:4px}
+  /* Future Jobs */
+  .jobs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media (max-width:900px){.jobs{grid-template-columns:1fr}}
+  .job{background:linear-gradient(180deg,#0f1726,#0c131f);border:1px solid var(--border);border-radius:14px;padding:12px}
+  .job h3{margin:0 0 6px 0}
+  .badge{display:inline-flex;gap:6px;align-items:center;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);color:#cfe3ff;background:#0e1726}
+  .gap{color:#ffd28b}
+  .ok{color:#aef7d3}
   footer{margin:20px 0 50px;text-align:center;color:#89a1c5;font-size:12px}
-  .sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 </style>
 </head>
 <body>
@@ -92,8 +97,8 @@
   <div class="brand">
     <div class="logo" aria-hidden="true"></div>
     <div>
-      <h1>آینه آینده X — نسخه نهایی</h1>
-      <div class="sub">سناریوساز شخصی با پشتوانه اندیشکده‌ها، هشدار ریسک، و اقدامات عملی</div>
+      <h1>آینه آینده X — نسخه نهایی جامع</h1>
+      <div class="sub">سناریوساز شخصی + شغل‌های آینده مقاوم در برابر هوش مصنوعی</div>
     </div>
   </div>
   <div class="header-actions">
@@ -256,10 +261,35 @@
         <h2>تحلیل آینده و پیشنهادها</h2>
         <div id="futureAnalysis" class="analysisBox"></div>
       </div>
+
+      <!-- NEW: Future-proof Jobs -->
+      <div class="section" aria-label="شغل‌های آینده مقاوم در برابر هوش مصنوعی">
+        <h2>شغل‌های آینده مقاوم در برابر هوش مصنوعی</h2>
+        <div class="row">
+          <div class="col">
+            <label for="autoPressure">فشار اتوماسیون (سناریو)</label>
+            <select id="autoPressure">
+              <option value="base" selected>عادی</option>
+              <option value="elevated">افزایش‌یافته</option>
+              <option value="extreme">حداکثری</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="jobCount">تعداد پیشنهاد شغلی</label>
+            <select id="jobCount">
+              <option>5</option>
+              <option selected>8</option>
+              <option>12</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint">برای هر شغل: امتیاز مقاومت در برابر اتوماسیون، انطباق با ترندها و مهارت‌ها، و مسیر مرحله‌ای رسیدن با زمان/هزینه تخمینی نمایش داده می‌شود.</p>
+        <div id="jobsWrap" class="jobs"></div>
+      </div>
     </div>
   </div>
 
-  <footer>نسخه نهایی نمایشی — آماده اتصال به داده‌های زنده و گزارش‌های رسمی. برای انتشار: همین فایل را در GitHub Pages قرار بده.</footer>
+  <footer>نسخه نهایی — آماده انتشار در GitHub Pages. برای سفارشی‌سازی داده شغل/مسیر، آرایه JOBS را ویرایش کن.</footer>
 </div>
 
 <script>
@@ -325,6 +355,140 @@
     { name:'AEI', domain:'econ', w:0.6 }
   ];
 
+  // NEW: Future-proof Jobs dataset (curated, cross-domain)
+  const JOBS = [
+    {
+      id:'ai-product-manager',
+      title:'مدیر محصول هوش مصنوعی',
+      domain:'tech', aiResist:0.78,
+      trends:['ai','data','urban'], // data mapped from 'ai','urban' etc. 'data' virtual
+      skillsCore:['Product Strategy','AI Basics','Data Literacy','User Research'],
+      skillsPlus:['Prompt Design','A/B Testing','Responsible AI'],
+      pathway:[
+        {step:'آشنایی AI + فهم مدل‌های مولد', time:'2-3 هفته', cost:'کم'},
+        {step:'پروژه MVP با مدل آماده', time:'3-4 هفته', cost:'کم/متوسط'},
+        {step:'اعتبارسنجی و اندازه‌گیری', time:'2 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'ai-safety-governance',
+      title:'کارشناس ایمنی و حاکمیت هوش مصنوعی',
+      domain:'tech', aiResist:0.86,
+      trends:['ai','cyber'],
+      skillsCore:['Risk Assessment','Policy','Security Basics'],
+      skillsPlus:['Red Teaming','Model Evaluation','Audit'],
+      pathway:[
+        {step:'مبانی ریسک/سیاست AI', time:'3 هفته', cost:'کم'},
+        {step:'تمرین ارزیابی ریسک روی کیس واقعی', time:'3-4 هفته', cost:'کم'},
+        {step:'طراحی رویه‌های ممیزی', time:'2 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'data-analyst-public-health',
+      title:'تحلیلگر داده سلامت عمومی',
+      domain:'soc', aiResist:0.8,
+      trends:['aging','bio'],
+      skillsCore:['Statistics','SQL','Public Health Basics'],
+      skillsPlus:['GIS','Dashboarding'],
+      pathway:[
+        {step:'آمار/SQL فشرده', time:'4-6 هفته', cost:'کم/متوسط'},
+        {step:'پروژه داشبورد سلامت شهری', time:'3 هفته', cost:'کم'},
+        {step:'ارائه به ذی‌نفعان', time:'1 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'climate-solutions-consultant',
+      title:'مشاور راهکارهای اقلیمی و ESG',
+      domain:'clim', aiResist:0.82,
+      trends:['green','energy'],
+      skillsCore:['ESG','Lifecycle Analysis','Stakeholder Mgmt'],
+      skillsPlus:['Carbon Accounting','Sustainability Reporting'],
+      pathway:[
+        {step:'مبانی ESG/حسابرسی کربن', time:'3-4 هفته', cost:'کم'},
+        {step:'Case Study شرکت محلی', time:'3 هفته', cost:'کم'},
+        {step:'گزارش‌گری و نقشه راه', time:'2 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'supply-chain-resilience',
+      title:'کارشناس تاب‌آوری زنجیره تأمین',
+      domain:'econ', aiResist:0.76,
+      trends:['supply','geo'],
+      skillsCore:['Ops Research','Supplier Risk','Scenario Planning'],
+      skillsPlus:['Optimization','Simulation'],
+      pathway:[
+        {step:'مدیریت ریسک تأمین', time:'3 هفته', cost:'کم'},
+        {step:'شبیه‌سازی سناریو (Spreadsheet)', time:'2 هفته', cost:'کم'},
+        {step:'طرح تنوع‌بخشی تأمین', time:'2-3 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'cybersecurity-lead',
+      title:'رهبر امنیت سایبری سازمانی',
+      domain:'geo', aiResist:0.88,
+      trends:['cyber','ai'],
+      skillsCore:['Threat Modeling','Zero Trust','IR Plans'],
+      skillsPlus:['Cloud Sec','Red/Blue Team'],
+      pathway:[
+        {step:'مبانی Threat Modeling/Zero Trust', time:'3 هفته', cost:'کم'},
+        {step:'تمرین Incident Response', time:'2 هفته', cost:'کم'},
+        {step:'سخت‌سازی Cloud/DevSecOps', time:'3 هفته', cost:'متوسط'}
+      ]
+    },
+    {
+      id:'human-centered-educator',
+      title:'طراح آموزشی انسان‌محور (EdTech)',
+      domain:'soc', aiResist:0.74,
+      trends:['ed','ai'],
+      skillsCore:['Curriculum Design','Assessment','Learning Science'],
+      skillsPlus:['Adaptive Tools','Content Ops'],
+      pathway:[
+        {step:'اصول یادگیری/ارزیابی', time:'3 هفته', cost:'کم'},
+        {step:'طراحی دوره کوتاه + ابزار تطبیقی', time:'3 هفته', cost:'کم'},
+        {step:'آزمون با 20 فراگیر', time:'2 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'city-innovation-planner',
+      title:'برنامه‌ریز نوآوری شهری',
+      domain:'tech', aiResist:0.77,
+      trends:['urban','energy','green'],
+      skillsCore:['Urban Systems','Project Finance Basics','Policy'],
+      skillsPlus:['IoT Basics','Mobility Data'],
+      pathway:[
+        {step:'مبانی سیستم‌های شهری/سیاست', time:'3-4 هفته', cost:'کم'},
+        {step:'پروژه پایلوت (حمل‌ونقل/انرژی)', time:'3 هفته', cost:'کم'},
+        {step:'اکوسیستم‌سازی ذی‌نفعان', time:'2 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'behavioral-product-designer',
+      title:'طراح محصول رفتاری',
+      domain:'econ', aiResist:0.73,
+      trends:['ai','fin'],
+      skillsCore:['UX Research','Behavioral Economics','Experimentation'],
+      skillsPlus:['Analytics','Ethical Design'],
+      pathway:[
+        {step:'اصول اقتصاد رفتاری در محصول', time:'2-3 هفته', cost:'کم'},
+        {step:'طراحی و تست آزمایش رفتاری', time:'3 هفته', cost:'کم'},
+        {step:'تحلیل و نهادینه‌سازی', time:'2 هفته', cost:'کم'}
+      ]
+    },
+    {
+      id:'ai-ethics-ombudsperson',
+      title:'مسئول اخلاق و سرپرست شکایات AI',
+      domain:'soc', aiResist:0.85,
+      trends:['ai','cyber'],
+      skillsCore:['Ethics','Mediation','Policy'],
+      skillsPlus:['Bias Audits','Explainability'],
+      pathway:[
+        {step:'چارچوب‌های اخلاقی/حقوقی', time:'3 هفته', cost:'کم'},
+        {step:'فرآیند رسیدگی به شکایات', time:'2 هفته', cost:'کم'},
+        {step:'مکانیزم‌های کاهش بایاس', time:'3 هفته', cost:'کم'}
+      ]
+    }
+  ];
+
   // ---------- UI Elements ----------
   const decisionEl = document.getElementById('decision');
   const riskEl = document.getElementById('risk');
@@ -369,6 +533,11 @@
   const exportBtn = document.getElementById('exportBtn');
   const themeToggle = document.getElementById('themeToggle');
 
+  // NEW: Jobs elements
+  const jobsWrap = document.getElementById('jobsWrap');
+  const autoPressureEl = document.getElementById('autoPressure');
+  const jobCountEl = document.getElementById('jobCount');
+
   // ---------- Helpers ----------
   const dpi = window.devicePixelRatio || 1;
   function clamp01(x){ return Math.max(0, Math.min(1, x)); }
@@ -387,7 +556,7 @@
       el.innerHTML = `<span class="dot" style="background:${on?'#7ee787':'#6b7280'}"></span>${t.name}`;
       el.addEventListener('click', ()=>{
         if(on) selectedTrends.delete(t.id); else selectedTrends.add(t.id);
-        renderTrendChips();
+        renderTrendChips(); // no recompute here to let user toggle multiple then simulate
       });
       trendChips.appendChild(el);
     });
@@ -401,6 +570,7 @@
       sourceChips.appendChild(chip);
     });
   }
+  renderTrendChips(); renderSourceChips();
 
   // ---------- Radar ----------
   const DIMENSIONS = [
@@ -412,7 +582,6 @@
   ];
   let scores = { career:0.6, wealth:0.55, well:0.58, impact:0.62, res:0.57 };
   let bands  = { career:0.12, wealth:0.1,  well:0.11, impact:0.09, res:0.1  };
-
   function resizeRadar(){
     const rect = radar.getBoundingClientRect();
     radar.width = rect.width * dpi;
@@ -421,7 +590,6 @@
     drawRadar();
   }
   window.addEventListener('resize', resizeRadar);
-
   function drawRadar(){
     const w = radar.width/dpi, h = radar.height/dpi;
     rctx.clearRect(0,0,w,h);
@@ -451,7 +619,7 @@
       rctx.fillText(d.label,lx,ly);
     });
 
-    // uncertainty band
+    // band
     rctx.beginPath();
     DIMENSIONS.forEach((d,i)=>{
       const v = clamp01(scores[d.id] + bands[d.id]);
@@ -476,7 +644,6 @@
     grad.addColorStop(1,'rgba(122,162,247,0.28)');
     rctx.fillStyle=grad; rctx.fill();
     rctx.strokeStyle='rgba(126,231,135,0.7)'; rctx.lineWidth=2; rctx.stroke();
-
     rctx.restore();
   }
 
@@ -531,7 +698,7 @@
     { keys:['climate','energy','esg','سازگاری','انرژی','اقلیم','پایداری'], dim:'impact', delta:0.05, domain:'clim' },
     { keys:['product','design','ux','ui','figma','طراحی','محصول'], dim:'career', delta:0.03, domain:'tech' },
     { keys:['security','امنیت','cyber','devsecops'], dim:'res', delta:0.05, domain:'geo' },
-    { keys:['finance','quant','valuation','مالی','پرتفو'], dim:'wealth', delta:0.05, domain:'econ' },
+    { keys:['finance','quant','valuation','مالی','پرتفو','پرتفوی'], dim:'wealth', delta:0.05, domain:'econ' },
     { keys:['health','سلامت','bio','biology'], dim:'well', delta:0.03, domain:'soc' },
   ];
   function analyzeSkills(text){
@@ -595,16 +762,13 @@
     const thrR = parseFloat(thrRiskEl.value)||0.6;
     const thrU = parseFloat(thrUncEl.value)||0.7;
     const ids = new Set(activeTrends);
-
     const push = (cls, txt) => {
       const el=document.createElement('div'); el.className='alert '+cls; el.innerHTML = `⚠️ ${txt}`; alertsBox.appendChild(el);
     };
-
     if(systemicRisk>=thrR) push('danger','ریسک سیستمی بالاست. پوشش‌ریسک و گزینه توقف سریع تعریف کن.');
     if(unc>=thrU) push('warn','عدم‌قطعیت زیاد است؛ آزمایش‌های کوچک، تصمیم‌های قابل‌برگشت.');
     if(ids.has('geo') && ids.has('energy')) push('warn','ترکیب ژئو + انرژی می‌تواند نوسان زیرساخت/قیمت بسازد. برنامه انعطاف‌پذیری آماده کن.');
     if(ids.has('ai') && ids.has('cyber')) push('warn','اتوماسیون + ریسک سایبری: کنترل دسترسی/ممیزی داده را تقویت کن.');
-
     if(!alertsBox.children.length){
       const ok=document.createElement('div'); ok.className='alert ok';
       ok.textContent='وضعیت پایدار: هشدار فعالی وجود ندارد. پایش مستمر ادامه یابد.'; alertsBox.appendChild(ok);
@@ -671,126 +835,4 @@
     const P = { up: upP/sum, base: baseP/sum, down: downP/sum };
 
     const defs = [
-      { id:'up',   label:'Upside (اثر زیاد/احتمال کم)', color:'#aef7d3', prob:P.up,
-        tip:'آزمایش‌های کم‌هزینه با آپساید بزرگ؛ مزیت داده/مالکیت فکری بساز.' },
-      { id:'base', label:'Base (محتمل‌ترین)',            color:'#7aa2f7', prob:P.base,
-        tip:'بهینه‌سازی جریان کار، شاخص‌های پیشرو را هفتگی رصد کن.' },
-      { id:'down', label:'Downside (ریسک دنباله)',       color:'#ffb4b4', prob:P.down,
-        tip:'پوشش‌ریسک، کاهش هزینه ثابت، گزینه توقف سریع.' },
-    ];
-
-    scenariosEl.innerHTML='';
-    defs.forEach(s=>{
-      const card=document.createElement('div'); card.className='actionCard';
-      card.innerHTML=`
-        <div class="pill"><span style="width:8px;height:8px;background:${s.color};border-radius:50%"></span>${s.label} — احتمال: ${(s.prob*100|0)}%</div>
-        <div class="hint">${s.tip}</div>`;
-      scenariosEl.appendChild(card);
-    });
-  }
-
-  // ---------- Why Panel ----------
-  function renderWhy(dec, riskTol, horizon, unc, domainW){
-    const reasons = [
-      { title:'وزن‌دهی دامنه‌ها', detail:`Tech:${(domainW.tech||0).toFixed(2)} Econ:${(domainW.econ||0).toFixed(2)} Geo:${(domainW.geo||0).toFixed(2)} Clim:${(domainW.clim||0).toFixed(2)} Soc:${(domainW.soc||0).toFixed(2)}`, weight:0.30 },
-      { title:'اثر ترندهای فعال', detail:`ترندهای انتخابی فرصت/ریسک را تغییر داده‌اند. عدم‌قطعیت فعلی: ${pct(unc)}%`, weight:0.26 },
-      { title:'تناسب مهارت‌ها', detail:'مهارت‌های شناسایی‌شده به ابعاد امتیاز نگاشت شده‌اند.', weight:0.20 },
-      { title:'افق زمانی', detail:`افق ${horizon} ماهه دامنه باند عدم‌قطعیت را تغییر داده است.`, weight:0.14 },
-      { title:'تحمل ریسک', detail:`تنظیم ${riskTol==='low'?'محافظه‌کارانه':(riskTol==='high'?'تهاجمی':'متعادل')} در وزن‌دهی لحاظ شد.`, weight:0.10 },
-    ];
-    whyList.innerHTML='';
-    reasons.forEach(r=>{
-      const row=document.createElement('div'); row.className='reason';
-      row.innerHTML=`
-        <div style="min-width:8px;height:8px;background:#7ee787;border-radius:50%;margin-top:6px"></div>
-        <div style="flex:1">
-          <div style="color:#cfe3ff;font-size:13px;margin-bottom:4px">${r.title}</div>
-          <div class="hint" style="margin-bottom:8px">${r.detail}</div>
-          <div class="bar"><span style="width:${Math.round(r.weight*100)}%"></span></div>
-        </div>`;
-      whyList.appendChild(row);
-    });
-
-    // منابع مؤثر (مرتب‌شده بر اساس دامنه‌های پر وزن)
-    whySources.innerHTML='';
-    const sortedDomains = Object.entries(domainW).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
-    const pool = SOURCES.slice().sort((a,b)=> sortedDomains.indexOf(a.domain) - sortedDomains.indexOf(b.domain));
-    pool.slice(0,16).forEach(s=>{
-      const clr = s.domain==='econ'?'#7ee787': s.domain==='geo'?'#ffb4b4': s.domain==='tech'?'#7aa2f7': s.domain==='clim'?'#ffd28b':'#c0a6ff';
-      const chip=document.createElement('span'); chip.className='chip';
-      chip.innerHTML=`<span class="dot" style="background:${clr}"></span>${s.name}`;
-      whySources.appendChild(chip);
-    });
-  }
-
-  // ---------- Future Analysis ----------
-  function renderFutureText(profile, decisionKey, trendKeys, domainW){
-    const topDomain = Object.entries(domainW).sort((a,b)=>b[1]-a[1])[0][0];
-    const domainLabel = DOMAINS.find(d=>d.id===topDomain)?.label || '';
-    const trends = trendKeys.map(id=>TRENDS.find(t=>t.id===id)?.name).filter(Boolean).join('، ') || '—';
-    const riskLabel = profile.risk==='high'?'بالا':(profile.risk==='low'?'کم':'متوسط');
-    const src = (SOURCES.find(s=>s.domain===topDomain)?.name)||'اندیشکده‌های معتبر';
-
-    let html = `<p>اگر این مسیر «${decisionKey||'—'}» را با افق ${profile.horizon} ماهه ادامه بدهی، محتمل‌ترین کانون اثر تو حوزه <strong>${domainLabel}</strong> خواهد بود. ترندهای فعال (${trends}) در این بازه بیشترین نقش را بازی می‌کنند. با ریسک ${riskLabel}، توصیه‌های زیر بیشترین نسبت اثر/هزینه را دارند:</p>`;
-
-    const recs = [
-      { t:'تقویت مهارت مکمل در حوزه غالب', r:`بر اساس ${src}، ترکیب مهارت‌های فعلی با مهارت‌های نوظهور حوزه غالب می‌تواند بازدهی را تا حدود ۳۰٪ افزایش دهد. مسیر یادگیری فشرده ۸–۱۰ هفته‌ای تنظیم کن.` },
-      { t:'شبکه‌سازی هدفمند زودهنگام', r:`در محیط‌های با ریسک ${riskLabel}، شبکه‌های قوی، تاب‌آوری تصمیم را افزایش می‌دهند. هر هفته ۲ ارتباط جدید + ۱ گفت‌وگوی اطلاعاتی.` },
-      { t:'پایش شاخص‌های پیشرو', r:'ماهانه یک داشبورد کوچک از ۳ شاخص مرتبط با ترندها بساز (مثلاً سرمایه‌گذاری در AI/انرژی پاک/شاخص ریسک ژئو) تا زودتر از بازار واکنش نشان دهی.' },
-      { t:'آزمایش‌های کوچک قابل برگشت', r:'به‌جای تعهد سنگین، آزمایش‌های ۲–۳ هفته‌ای با معیار موفقیت روشن انجام بده و براساس داده تصمیم بگیر.' },
-    ];
-
-    futureAnalysis.innerHTML='';
-    futureAnalysis.innerHTML += html;
-    recs.forEach(x=>{
-      const item = document.createElement('div'); item.className='rec';
-      item.innerHTML = `💡 ${x.t}<div class="reason">${x.r}</div>`;
-      futureAnalysis.appendChild(item);
-    });
-  }
-
-  // ---------- Simulation pipeline ----------
-  function compute(){
-    const decRaw = (decisionEl.value||'').trim();
-    const decision = decRaw.toLowerCase().includes('استارتاپ') ? 'startup'
-                   : decRaw.toLowerCase().includes('سرمایه') ? 'invest'
-                   : decRaw.toLowerCase().includes('مهاج') ? 'relocate'
-                   : decRaw.toLowerCase().includes('یاد') ? 'learn'
-                   : 'career';
-
-    const riskTol = riskEl.value;
-    const horizon = Number(horizonEl.value);
-    const activeTrends = Array.from(selectedTrends);
-
-    // domain weights
-    const domainW = dynamicDomainWeights(decision, selectedTrends);
-    renderDomainMatrix(domainW, decision);
-    renderSourceTable(domainW);
-
-    // baseline scores by decision
-    const base = (()=>{
-      switch(decision){
-        case 'career': return { career:0.62, wealth:0.55, well:0.60, impact:0.58, res:0.57 };
-        case 'startup':return { career:0.58, wealth:0.60, well:0.52, impact:0.64, res:0.55 };
-        case 'invest': return { career:0.52, wealth:0.65, well:0.56, impact:0.50, res:0.58 };
-        case 'relocate':return { career:0.60, wealth:0.56, well:0.62, impact:0.55, res:0.60 };
-        case 'learn':  return { career:0.66, wealth:0.54, well:0.60, impact:0.58, res:0.56 };
-        default: return { career:0.58, wealth:0.58, well:0.58, impact:0.58, res:0.58 };
-      }
-    })();
-
-    scores = {...base};
-    let opportunity = 0.58, systemicRisk = 0.38;
-
-    // trend contributions with domain modulation
-    activeTrends.forEach(id=>{
-      const t = TRENDS.find(x=>x.id===id); if(!t) return;
-      const domFactor = (domainW[t.domain]||0.2) + 0.6; // 0.6..1.6
-      opportunity += t.opp * 0.36 * domFactor/(1 + activeTrends.length*0.25);
-      systemicRisk += t.risk * 0.42 * domFactor/(1 + activeTrends.length*0.25);
-
-      scores.career += (t.opp - t.risk*0.12)*0.18*domFactor;
-      scores.wealth += (t.opp - t.risk*0.10)*0.22*domFactor;
-      scores.impact += (t.opp)*0.20*domFactor;
-      scores.res    += (0.10 - t.risk*0.16)*domFactor;
-      scores.well   +=
+      { id:'up',   label:'Upside (اثر زیاد/احتمال کم
