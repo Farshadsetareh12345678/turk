@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پیش‌بینی حال‌وهوای امروز</title>
+    <title>دستیار سریع تریدر</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🔮 حال‌وهوای امروزت</h1>
-        <p id="mood">برای دیدن پیش‌بینی، روی دکمه کلیک کن!</p>
-        <button onclick="generateMood()">پیش‌بینی کن</button>
+        <h1>📊 دستیار سریع تریدر</h1>
+        
+        <section id="prices">
+            <h2>قیمت لحظه‌ای</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>نماد</th>
+                        <th>قیمت (USD)</th>
+                        <th>تغییر ۲۴ساعته</th>
+                    </tr>
+                </thead>
+                <tbody id="priceTable"></tbody>
+            </table>
+        </section>
+
+        <section id="calculator">
+            <h2>ماشین‌حساب سود/ضرر</h2>
+            <input type="number" id="buyPrice" placeholder="قیمت خرید">
+            <input type="number" id="sellPrice" placeholder="قیمت فروش">
+            <input type="number" id="amount" placeholder="تعداد/حجم">
+            <button onclick="calculateProfit()">محاسبه</button>
+            <p id="result"></p>
+        </section>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
