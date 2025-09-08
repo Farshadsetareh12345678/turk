@@ -1,0 +1,18 @@
+<h2>مرحله ۶: رمزنگاری</h2>
+<p>متن رمزنگاری‌شده: <code>U2FsdGVkX1Freedom</code></p>
+<p>رمزگشایی‌شده رو وارد کن:</p>
+<input type="text" id="input">
+<button onclick="check()">بررسی</button>
+<p id="result"></p>
+
+<script>
+function check() {
+  const val = document.getElementById("input").value;
+  if (val === "Freedom") {
+    document.getElementById("result").innerText = "✅ درست گفتی!";
+    setTimeout(() => window.location.href = "stage7.html", 1000);
+  } else {
+    document.getElementById("result").innerText = "❌ اشتباهه!";
+  }
+}
+</script>
