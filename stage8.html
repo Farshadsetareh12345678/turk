@@ -1,0 +1,18 @@
+<h2>مرحله ۸: ترمینال فرار</h2>
+<p>دستور زیر رو تایپ کن:</p>
+<code>sudo escape</code>
+<input type="text" id="input">
+<button onclick="check()">بررسی</button>
+<p id="result"></p>
+
+<script>
+function check() {
+  const val = document.getElementById("input").value.trim();
+  if (val === "sudo escape") {
+    document.getElementById("result").innerText = "✅ ترمینال فعال شد!";
+    setTimeout(() => window.location.href = "stage9.html", 1000);
+  } else {
+    document.getElementById("result").innerText = "❌ دستور اشتباهه!";
+  }
+}
+</script>
