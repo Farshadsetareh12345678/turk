@@ -1,0 +1,19 @@
+<h2>مرحله ۷: حافظه‌ی گمشده</h2>
+<p>رنگ‌ها رو به خاطر بسپار:</p>
+<div id="sequence">🔴 🟢 🔵</div>
+<p>ترتیب رو وارد کن (مثلاً: red green blue):</p>
+<input type="text" id="input">
+<button onclick="check()">بررسی</button>
+<p id="result"></p>
+
+<script>
+function check() {
+  const val = document.getElementById("input").value.toLowerCase();
+  if (val === "red green blue") {
+    document.getElementById("result").innerText = "✅ حافظه‌ات عالیه!";
+    setTimeout(() => window.location.href = "stage8.html", 1000);
+  } else {
+    document.getElementById("result").innerText = "❌ اشتباهه!";
+  }
+}
+</script>
