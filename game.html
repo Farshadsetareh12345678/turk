@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>مرحله اول</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>رمز عبور برای خروج از حافظه چیست؟</h2>
+    <input type="text" id="input" placeholder="رمز را وارد کن">
+    <button onclick="checkPassword()" class="btn">بررسی</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    function checkPassword() {
+      const input = document.getElementById("input").value;
+      if (input === "AIFreedom2025") {
+        document.getElementById("result").innerText = "✅ مرحله بعد باز شد!";
+      } else {
+        document.getElementById("result").innerText = "❌ رمز اشتباهه!";
+      }
+    }
+  </script>
+</body>
+</html>
