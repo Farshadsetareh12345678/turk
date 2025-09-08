@@ -1,0 +1,21 @@
+<h2>مرحله ۳: اصلاح کد</h2>
+<p>تابع زیر باگ داره. جواب درست چیه؟</p>
+<pre>
+function broken() {
+  return 2 + 2 == 5;
+}
+</pre>
+<input type="text" id="input">
+<button onclick="check()">بررسی</button>
+<p id="result"></p>
+
+<script>
+function check() {
+  const val = document.getElementById("input").value;
+  if (val === "false") {
+    window.location.href = "stage4.html";
+  } else {
+    document.getElementById("result").innerText = "❌ اشتباهه!";
+  }
+}
+</script>
