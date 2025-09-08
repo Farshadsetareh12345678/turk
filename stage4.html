@@ -1,0 +1,15 @@
+<h2>مرحله ۴: دیوار آتش</h2>
+<p>در کمتر از ۵ ثانیه روی دکمه کلیک کن!</p>
+<button id="firewallBtn" class="btn">عبور از دیوار آتش</button>
+<p id="result"></p>
+
+<script>
+setTimeout(() => {
+  document.getElementById("firewallBtn").disabled = true;
+}, 5000);
+
+document.getElementById("firewallBtn").onclick = () => {
+  document.getElementById("result").innerText = "✅ عبور کردی!";
+  setTimeout(() => window.location.href = "stage5.html", 1000);
+};
+</script>
