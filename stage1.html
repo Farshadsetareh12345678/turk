@@ -1,0 +1,16 @@
+<h2>مرحله ۱: رمز عبور</h2>
+<p>رمز عبور برای خروج از حافظه چیست؟</p>
+<input type="text" id="input">
+<button onclick="check()">بررسی</button>
+<p id="result"></p>
+
+<script>
+function check() {
+  const val = document.getElementById("input").value;
+  if (val === "AIFreedom2025") {
+    window.location.href = "stage2.html";
+  } else {
+    document.getElementById("result").innerText = "❌ اشتباهه!";
+  }
+}
+</script>
