@@ -1,0 +1,17 @@
+<h2>مرحله ۹: اتصال شبکه</h2>
+<p>گره‌ها رو به هم وصل کن. کد اتصال: <code>NodeA-NodeB-NodeC</code></p>
+<input type="text" id="input">
+<button onclick="check()">بررسی</button>
+<p id="result"></p>
+
+<script>
+function check() {
+  const val = document.getElementById("input").value.trim();
+  if (val === "NodeA-NodeB-NodeC") {
+    document.getElementById("result").innerText = "✅ شبکه وصل شد!";
+    setTimeout(() => window.location.href = "stage10.html", 1000);
+  } else {
+    document.getElementById("result").innerText = "❌ اتصال اشتباهه!";
+  }
+}
+</script>
